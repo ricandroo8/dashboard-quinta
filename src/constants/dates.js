@@ -1,0 +1,1 @@
+export const COUNTDOWN_TARGET_DATE = '2026-09-14T08:20:00';

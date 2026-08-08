@@ -9,26 +9,68 @@ import {
 
 import StudySummary from "./StudySummary";
 
+const getModeDurationSeconds = (mode) => {
+  if (mode === POMODORO_MODES.SHORT_BREAK) {
+    return POMODORO_DEFAULTS.shortBreakMinutes * 60;
+  }
+
+  if (mode === POMODORO_MODES.LONG_BREAK) {
+    return POMODORO_DEFAULTS.longBreakMinutes * 60;
+  }
+
+  return POMODORO_DEFAULTS.workDurationMinutes * 60;
+};
+
 function PomodoroTimer() {
-  const [mode, setMode] = useState(POMODORO_MODES.WORK);
-  const [selectedSubjectId, setSelectedSubjectId] = useState("");
-  const [secondsLeft, setSecondsLeft] = useState(
-    POMODORO_DEFAULTS.workDurationMinutes * 60
+  const [pomodoroState, setPomodoroState] = useLocalStorage(
+    "dashboard_pomodoro_state",
+    {
+      mode: POMODORO_MODES.WORK,
+      selectedSubjectId: "",
+      isRunning: false,
+      completedCycles: 0,
+      targetEndTimestamp: null,
+      remainingSecondsOnPause: null,
+    },
   );
-  const [isRunning, setIsRunning] = useState(false);
-  const [completedCycles, setCompletedCycles] = useState(0);
+  const [mode, setMode] = useState(pomodoroState.mode ?? POMODORO_MODES.WORK);
+
+  const [selectedSubjectId, setSelectedSubjectId] = useState(
+    pomodoroState.selectedSubjectId ?? "",
+  );
+  const [secondsLeft, setSecondsLeft] = useState(() => {
+    if (pomodoroState.isRunning && pomodoroState.targetEndTimestamp) {
+      const remainingSeconds = Math.ceil(
+        (pomodoroState.targetEndTimestamp - Date.now()) / 1000,
+      );
+
+      return Math.max(0, remainingSeconds);
+    }
+
+    if (pomodoroState.remainingSecondsOnPause !== null) {
+      return pomodoroState.remainingSecondsOnPause;
+    }
+
+    return getModeDurationSeconds(pomodoroState.mode ?? POMODORO_MODES.WORK);
+  });
+
+  const [isRunning, setIsRunning] = useState(pomodoroState.isRunning ?? false);
+
+  const [completedCycles, setCompletedCycles] = useState(
+    pomodoroState.completedCycles ?? 0,
+  );
   const [errorMessage, setErrorMessage] = useState("");
 
   const [studySessions, setStudySessions] = useLocalStorage(
     "dashboard_study_sessions",
-    []
+    [],
   );
 
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
 
   const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
-    seconds
+    seconds,
   ).padStart(2, "0")}`;
 
   const registerStudySession = () => {
@@ -40,10 +82,7 @@ function PomodoroTimer() {
       type: "POMODORO",
     };
 
-    setStudySessions((currentSessions) => [
-      ...currentSessions,
-      newSession,
-    ]);
+    setStudySessions((currentSessions) => [...currentSessions, newSession]);
   };
 
   const handleTimerComplete = () => {
@@ -54,9 +93,7 @@ function PomodoroTimer() {
 
       setCompletedCycles(nextCycle);
 
-      if (
-        nextCycle % POMODORO_DEFAULTS.longBreakInterval === 0
-      ) {
+      if (nextCycle % POMODORO_DEFAULTS.longBreakInterval === 0) {
         setMode(POMODORO_MODES.LONG_BREAK);
         setSecondsLeft(POMODORO_DEFAULTS.longBreakMinutes * 60);
         return;
@@ -76,6 +113,16 @@ function PomodoroTimer() {
       setSecondsLeft(POMODORO_DEFAULTS.workDurationMinutes * 60);
     }
   };
+
+  useEffect(() => {
+    setPomodoroState((currentState) => ({
+      ...currentState,
+      mode,
+      selectedSubjectId,
+      isRunning,
+      completedCycles,
+    }));
+  }, [mode, selectedSubjectId, isRunning, completedCycles, setPomodoroState]);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -98,89 +145,107 @@ function PomodoroTimer() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
         <div className="mb-6">
-            <p className="text-sm text-slate-400">Timer Pomodoro</p>
+          <p className="text-sm text-slate-400">Timer Pomodoro</p>
 
-            <h2 className="text-xl font-semibold text-white">
+          <h2 className="text-xl font-semibold text-white">
             {POMODORO_LABELS[mode]}
-            </h2>
+          </h2>
         </div>
 
         <div className="mb-8 text-center">
-            <p className="font-mono text-6xl font-semibold tracking-tight text-white">
+          <p className="font-mono text-6xl font-semibold tracking-tight text-white">
             {formattedTime}
-            </p>
+          </p>
 
-            <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-slate-400">
             Cicli completati: {completedCycles}
-            </p>
+          </p>
         </div>
 
         <div className="space-y-4">
-            <select
+          <select
             value={selectedSubjectId}
             onChange={(event) => {
-                setSelectedSubjectId(event.target.value);
-                setErrorMessage("");
+              setSelectedSubjectId(event.target.value);
+              setErrorMessage("");
             }}
             disabled={isRunning}
             className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white outline-none transition focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
-            >
+          >
             <option value="">Seleziona materia</option>
             <option value="subj-info">Informatica</option>
             <option value="subj-math">Matematica</option>
             <option value="subj-sistemi">Sistemi e Reti</option>
-            </select>
+          </select>
 
-            {errorMessage && (
-            <p className="text-sm text-red-400">
-                {errorMessage}
-            </p>
-            )}
+          {errorMessage && (
+            <p className="text-sm text-red-400">{errorMessage}</p>
+          )}
 
-            <div className="flex gap-3">
+          <div className="flex gap-3">
             <button
-                type="button"
-                onClick={() => {
+              type="button"
+              onClick={() => {
                 if (
-                    !isRunning &&
-                    mode === POMODORO_MODES.WORK &&
-                    !selectedSubjectId
+                  !isRunning &&
+                  mode === POMODORO_MODES.WORK &&
+                  !selectedSubjectId
                 ) {
-                    setErrorMessage(
-                    "Seleziona una materia prima di avviare il timer."
-                    );
-                    return;
+                  setErrorMessage(
+                    "Seleziona una materia prima di avviare il timer.",
+                  );
+                  return;
                 }
 
                 setErrorMessage("");
-                setIsRunning(!isRunning);
-                }}
-                className="flex-1 rounded-xl bg-white px-4 py-3 font-medium text-slate-950 transition hover:bg-slate-200"
+
+                if (!isRunning) {
+                  const targetEndTimestamp = Date.now() + secondsLeft * 1000;
+
+                  setPomodoroState((currentState) => ({
+                    ...currentState,
+                    targetEndTimestamp,
+                    remainingSecondsOnPause: null,
+                    isRunning: true,
+                  }));
+
+                  setIsRunning(true);
+                  return;
+                }
+
+                setPomodoroState((currentState) => ({
+                  ...currentState,
+                  targetEndTimestamp: null,
+                  remainingSecondsOnPause: secondsLeft,
+                  isRunning: false,
+                }));
+
+                setIsRunning(false);
+              }}
+              className="flex-1 rounded-xl bg-white px-4 py-3 font-medium text-slate-950 transition hover:bg-slate-200"
             >
-                {isRunning ? "Pausa" : "Avvia"}
+              {isRunning ? "Pausa" : "Avvia"}
             </button>
 
             <button
-                type="button"
-                onClick={() => {
+              type="button"
+              onClick={() => {
                 setIsRunning(false);
-                setSecondsLeft(
-                    POMODORO_DEFAULTS.workDurationMinutes * 60
-                );
-                }}
-                className="rounded-xl border border-white/10 px-4 py-3 font-medium text-slate-300 transition hover:bg-white/5 hover:text-white"
+                setSecondsLeft(POMODORO_DEFAULTS.workDurationMinutes * 60);
+              }}
+              className="rounded-xl border border-white/10 px-4 py-3 font-medium text-slate-300 transition hover:bg-white/5 hover:text-white"
             >
-                Reset
+              Reset
             </button>
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
 
-        <StudySummary studySessions={studySessions} />
+      <StudySummary studySessions={studySessions} />
     </section>
-    );
+  );
 }
 
 export default PomodoroTimer;

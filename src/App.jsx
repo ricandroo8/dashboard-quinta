@@ -8,6 +8,7 @@ import {
 
 import DashboardLayout from './components/layout/DashboardLayout';
 import TaskManager from './components/tasks/TaskManager';
+import PomodoroTimer from "./components/pomodoro/PomodoroTimer";
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -58,6 +59,7 @@ export default function App() {
       )}
 
       {activeSection === 'tasks' && <TaskManager />}
+      {activeSection === 'pomodoro' && <PomodoroTimer />}
     </DashboardLayout>
   );
 }

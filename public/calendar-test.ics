@@ -1,0 +1,31 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Dashboard Quinta//Calendar Test//IT
+
+BEGIN:VEVENT
+UID:test-1
+SUMMARY:[Verifica] Informatica - JavaScript
+DTSTART:20260812T080000
+DTEND:20260812T090000
+DESCRIPTION:Verifica sugli argomenti principali di JavaScript
+LOCATION:Aula 12
+END:VEVENT
+
+BEGIN:VEVENT
+UID:test-2
+SUMMARY:[Interrogazione] Storia - Prima guerra mondiale
+DTSTART:20260813T090000
+DTEND:20260813T100000
+DESCRIPTION:Interrogazione di storia
+LOCATION:Aula 8
+END:VEVENT
+
+BEGIN:VEVENT
+UID:test-3
+SUMMARY:Assemblea di istituto
+DTSTART:20260820T100000
+DESCRIPTION:
+LOCATION:Aula magna
+END:VEVENT
+
+END:VCALENDAR

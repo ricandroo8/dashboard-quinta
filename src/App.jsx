@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { parseICal } from "./utils/ical";
 
 import {
   LayoutDashboard,
@@ -9,10 +10,26 @@ import {
 import DashboardLayout from './components/layout/DashboardLayout';
 import TaskManager from './components/tasks/TaskManager';
 import PomodoroTimer from "./components/pomodoro/PomodoroTimer";
+import CalendarWidget from "./components/calendar/CalendarWidget";
+import { mockCalendarEvents } from "./data/mockCalendarEvents";
+
+import useICal from "./hooks/useICal";
 
 export default function App() {
+
   const [activeSection, setActiveSection] = useState('dashboard');
 
+  const {
+    events: calendarEvents,
+    loading: calendarLoading,
+    error: calendarError,
+  } = useICal("/calendar-test.ics");
+
+  console.log({
+    calendarEvents,
+    calendarLoading,
+    calendarError,
+  });
   return (
     <DashboardLayout
       activeSection={activeSection}
@@ -60,6 +77,7 @@ export default function App() {
 
       {activeSection === 'tasks' && <TaskManager />}
       {activeSection === 'pomodoro' && <PomodoroTimer />}
+      {activeSection === 'calendar' && <CalendarWidget events={calendarEvents} />}
     </DashboardLayout>
   );
 }

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { parseICal } from "./utils/ical";
 
 import {
   LayoutDashboard,
@@ -11,7 +10,6 @@ import DashboardLayout from './components/layout/DashboardLayout';
 import TaskManager from './components/tasks/TaskManager';
 import PomodoroTimer from "./components/pomodoro/PomodoroTimer";
 import CalendarWidget from "./components/calendar/CalendarWidget";
-import { mockCalendarEvents } from "./data/mockCalendarEvents";
 
 import useICal from "./hooks/useICal";
 
@@ -23,7 +21,7 @@ export default function App() {
     events: calendarEvents,
     loading: calendarLoading,
     error: calendarError,
-  } = useICal("/calendar-test.ics");
+  } = useICal("/api/school-calendar");
 
   console.log({
     calendarEvents,

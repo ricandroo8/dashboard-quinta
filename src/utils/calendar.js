@@ -1,28 +1,25 @@
-import { SUBJECTS } from "../constants/subjects";
+import { SUBJECTS } from "../constants/subjects.js";
+import {
+  CALENDAR_EVENT_PREFIXES,
+  CALENDAR_EVENT_TYPES,
+} from "../constants/calendar.js";
 
 export function detectEventType(rawTitle) {
-  const normalizedTitle = rawTitle.toLowerCase();
+  const normalizedTitle = (rawTitle ?? "").trim().toUpperCase();
 
-  if (normalizedTitle.includes("verifica")) {
-    return "VERIFICA";
+  for (const [prefix, type] of Object.entries(
+    CALENDAR_EVENT_PREFIXES,
+  )) {
+    if (normalizedTitle.startsWith(prefix)) {
+      return type;
+    }
   }
 
-  if (normalizedTitle.includes("interrogazione")) {
-    return "INTERROGAZIONE";
-  }
-
-  if (
-    normalizedTitle.includes("consegna") ||
-    normalizedTitle.includes("scadenza")
-  ) {
-    return "CONSEGNA";
-  }
-
-  return "GENERICO";
+  return CALENDAR_EVENT_TYPES.SCHEDULE;
 }
 
 export function detectSubjectId(rawTitle) {
-  const normalizedTitle = rawTitle.toLowerCase();
+  const normalizedTitle = (rawTitle ?? "").toLowerCase();
 
   const matchedSubject = SUBJECTS.find((subject) => {
     if (!subject.id) {
@@ -39,6 +36,25 @@ export function sortEventsByDate(events) {
   return [...events].sort(
     (a, b) => new Date(a.startDate) - new Date(b.startDate),
   );
+}
+
+export function filterEventsFromDate(
+  events,
+  referenceDate = new Date(),
+) {
+  const startOfReferenceDay = new Date(referenceDate);
+
+  startOfReferenceDay.setHours(0, 0, 0, 0);
+
+  return events.filter((event) => {
+    const eventDate = new Date(event.startDate);
+
+    if (Number.isNaN(eventDate.getTime())) {
+      return false;
+    }
+
+    return eventDate >= startOfReferenceDay;
+  });
 }
 
 export function formatEventDate(dateString) {
@@ -88,42 +104,34 @@ export function isUpcomingDeadline(dateString) {
 }
 
 export function cleanEventTitle(rawTitle) {
-  let title = rawTitle.trim();
+  let title = (rawTitle ?? "").trim();
 
   title = title.replace(
-    /^\[(verifica|interrogazione|consegna)\]\s*/i,
+    /^\[(orario|verifica|interrogazione|consegna|altro)\]\s*/i,
     "",
   );
 
-  const subject = SUBJECTS.find((item) => {
-    if (!item.id) {
-      return false;
-    }
-
-    return title
-      .toLowerCase()
-      .startsWith(item.label.toLowerCase());
-  });
-
-  if (subject) {
-    title = title.slice(subject.label.length).trim();
-  }
-
-  title = title.replace(/^[-:–—]\s*/, "");
-
-  return title || rawTitle;
+  return title || "Evento senza titolo";
 }
 
 export function normalizeCalendarEvent(event) {
+  const rawTitle = event.rawTitle ?? event.title ?? "";
+
   return {
     ...event,
 
-    rawTitle: event.rawTitle,
+    rawTitle,
 
-    title: cleanEventTitle(event.rawTitle),
+    title:
+      event.title ??
+      cleanEventTitle(rawTitle),
 
-    type: detectEventType(event.rawTitle),
+    type:
+      event.type ??
+      detectEventType(rawTitle),
 
-    subjectId: detectSubjectId(event.rawTitle),
+    subjectId:
+      event.subjectId ??
+      detectSubjectId(rawTitle),
   };
 }

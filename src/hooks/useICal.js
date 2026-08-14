@@ -9,31 +9,39 @@ function useICal(feedUrl) {
 
 
   useEffect(() => {
-    // Fetch
+    const controller = new AbortController();
+
     async function loadCalendar() {
-        try {
-            setLoading(true);
-            setError(null);
+      try {
+        setLoading(true);
+        setError(null);
 
-            const response = await fetch(feedUrl);
-            if (!response.ok) {
-                throw new Error(`Errore HTTP: ${response.status}`);
-            }
-            
-            const text = await response.text();
-            const parsedEvents = parseICal(text);
+        const response = await fetch(feedUrl, {
+          signal: controller.signal,
+        });
 
-            setEvents(parsedEvents);
-
-        } catch (err) {
-            setError(err.message);
+        if (!response.ok) {
+          throw new Error(`Errore HTTP: ${response.status}`);
         }
-        finally {
-            setLoading(false);
+
+        const text = await response.text();
+        const parsedEvents = parseICal(text);
+
+        setEvents(parsedEvents);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError(err.message);
         }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
     }
-    
+
     loadCalendar();
+
+    return () => controller.abort();
   }, [feedUrl]);
 
   return {

@@ -23,11 +23,6 @@ export default function App() {
     error: calendarError,
   } = useICal("/api/school-calendar");
 
-  console.log({
-    calendarEvents,
-    calendarLoading,
-    calendarError,
-  });
   return (
     <DashboardLayout
       activeSection={activeSection}
@@ -75,8 +70,13 @@ export default function App() {
 
       {activeSection === 'tasks' && <TaskManager />}
       {activeSection === 'pomodoro' && <PomodoroTimer />}
-      {activeSection === 'calendar' && <CalendarWidget events={calendarEvents} />}
+      {activeSection === 'calendar' && (
+        <CalendarWidget
+          events={calendarEvents}
+          loading={calendarLoading}
+          error={calendarError}
+        />
+      )}
     </DashboardLayout>
   );
 }
-

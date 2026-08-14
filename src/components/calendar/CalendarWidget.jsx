@@ -1,7 +1,14 @@
 import { CalendarDays, Clock } from "lucide-react";
 import { SUBJECT_LABELS } from "../../constants/subjects";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 import {
+  CALENDAR_EVENT_TYPES,
+  DEFAULT_CALENDAR_FILTERS,
+} from "../../constants/calendar";
+
+import {
+  filterEventsFromDate,
   formatEventDate,
   formatEventTime,
   getDaysUntilEvent,
@@ -10,9 +17,44 @@ import {
   sortEventsByDate,
 } from "../../utils/calendar";
 
-function CalendarWidget({ events = [] }) {
-  const normalizedEvents = events.map(normalizeCalendarEvent);
-  const sortedEvents = sortEventsByDate(normalizedEvents);
+function CalendarWidget({
+  events = [],
+  loading = false,
+  error = null,
+}) {
+  const [calendarFilters, setCalendarFilters] =
+    useLocalStorage(
+      "dashboard_calendar_filters",
+      DEFAULT_CALENDAR_FILTERS,
+    );
+  const normalizedEvents =
+    events.map(normalizeCalendarEvent);
+
+  const futureEvents =
+    filterEventsFromDate(normalizedEvents);
+
+  const filteredEvents = futureEvents.filter((event) => {
+    return (
+      calendarFilters[event.type] ??
+      DEFAULT_CALENDAR_FILTERS[event.type] ??
+      true
+    );
+  });
+
+  const sortedEvents =
+    sortEventsByDate(filteredEvents);
+
+  const toggleEventType = (eventType) => {
+    const isActive =
+      calendarFilters[eventType] ??
+      DEFAULT_CALENDAR_FILTERS[eventType] ??
+      true;
+
+    setCalendarFilters({
+      ...calendarFilters,
+      [eventType]: !isActive,
+    });
+  };
 
   return (
     <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
@@ -28,9 +70,48 @@ function CalendarWidget({ events = [] }) {
         </div>
       </div>
 
-      {sortedEvents.length === 0 ? (
+      <div className="mb-4 flex flex-wrap gap-2">
+        {Object.values(CALENDAR_EVENT_TYPES).map((eventType) => {
+          const isActive =
+            calendarFilters[eventType] ??
+            DEFAULT_CALENDAR_FILTERS[eventType];
+
+          return (
+            <button
+              key={eventType}
+              type="button"
+              onClick={() => toggleEventType(eventType)}
+              className={`rounded-full border px-3 py-1 text-xs transition ${
+                isActive
+                  ? "border-sky-400/40 bg-sky-400/15 text-sky-200"
+                  : "border-white/10 bg-white/5 text-white/40"
+              }`}
+            >
+              {eventType}
+            </button>
+          );
+        })}
+      </div>
+
+      {loading ? (
         <p className="text-sm text-white/50">
-          Nessuna scadenza in programma.
+          Caricamento calendario...
+        </p>
+      ) : error ? (
+        <div
+          role="alert"
+          className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-3"
+        >
+          <p className="text-sm font-medium text-rose-200">
+            Calendario non disponibile
+          </p>
+          <p className="mt-1 text-xs text-rose-200/70">
+            {error}
+          </p>
+        </div>
+      ) : sortedEvents.length === 0 ? (
+        <p className="text-sm text-white/50">
+          Nessun evento corrisponde ai filtri attivi.
         </p>
       ) : (
         <div className="space-y-3">
@@ -40,7 +121,10 @@ function CalendarWidget({ events = [] }) {
 
             return (
               <div
-                key={event.id}
+                key={
+                  event.instanceId ??
+                  `${event.id}-${event.startDate}`
+                }
                 className={`rounded-xl border p-3 ${
                   isUpcoming
                     ? "border-amber-400/30 bg-amber-400/10"

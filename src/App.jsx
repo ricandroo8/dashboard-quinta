@@ -10,6 +10,7 @@ import DashboardLayout from './components/layout/DashboardLayout';
 import TaskManager from './components/tasks/TaskManager';
 import PomodoroTimer from "./components/pomodoro/PomodoroTimer";
 import CalendarWidget from "./components/calendar/CalendarWidget";
+import QuickNotesHub from "./components/quick-notes/QuickNotesHub";
 
 import useICal from "./hooks/useICal";
 
@@ -76,6 +77,9 @@ export default function App() {
           loading={calendarLoading}
           error={calendarError}
         />
+      )}
+      {activeSection === "quick-notes" && (
+        <QuickNotesHub />
       )}
     </DashboardLayout>
   );

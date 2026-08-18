@@ -1,13 +1,11 @@
 import { useState } from 'react';
 
-import { mockF1Data } from './data/mockF1Data';
-
+import DashboardHome from './components/dashboard/DashboardHome';
 import DashboardLayout from './components/layout/DashboardLayout';
 import TaskManager from './components/tasks/TaskManager';
 import PomodoroTimer from "./components/pomodoro/PomodoroTimer";
 import CalendarWidget from "./components/calendar/CalendarWidget";
 import QuickNotesHub from "./components/quick-notes/QuickNotesHub";
-import F1Widget from './components/formula1/F1Widget';
 
 import useICal from "./hooks/useICal";
 import useF1Data from './hooks/useF1Data';
@@ -24,14 +22,17 @@ export default function App() {
 
   const {
     nextRace,
+    drivers,
+    constructors,
     loading: f1Loading,
     error: f1Error,
   } = useF1Data();
 
   const f1Data = nextRace
     ? {
-        ...mockF1Data,
         nextRace,
+        drivers,
+        constructors,
       }
     : null;
   
@@ -42,20 +43,11 @@ export default function App() {
       onSectionChange={setActiveSection}
     >
       {activeSection === 'dashboard' && (
-        // F1 Widget
-        <div className="w-full">
-          {f1Loading && (
-            <p>Caricamento dati Formula 1...</p>
-          )}
-
-          {!f1Loading && f1Error && (
-            <p>Errore: {f1Error}</p>
-          )}
-
-          {!f1Loading && !f1Error && f1Data && (
-            <F1Widget data={f1Data} />
-          )}
-        </div>
+        <DashboardHome
+          f1Data={f1Data}
+          f1Loading={f1Loading}
+          f1Error={f1Error}
+        />
       )}
 
       {activeSection === 'tasks' && <TaskManager />}

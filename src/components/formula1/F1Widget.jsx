@@ -30,13 +30,19 @@ function StandingRow({ position, name, detail, points }) {
       </span>
 
       <div className="min-w-0">
-        <p className="truncate text-xs font-semibold text-slate-200">
-          {name}
+        <p
+            title={name}
+            className="truncate text-xs font-semibold text-slate-200"
+        >
+            {name}
         </p>
         {detail && (
-          <p className="mt-0.5 truncate text-[10px] text-slate-500">
-            {detail}
-          </p>
+            <p
+                title={detail}
+                className="mt-0.5 truncate text-[10px] text-slate-500"
+            >
+                {detail}
+            </p>
         )}
       </div>
 

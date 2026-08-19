@@ -114,3 +114,88 @@ export async function exchangeSpotifyCode(code) {
 
   return data;
 }
+
+export async function refreshSpotifyAccessToken() {
+    const refreshToken  = localStorage.getItem("spotify_refresh_token");
+
+    if(!refreshToken) {
+      throw new Error ("Refresh token Spotify mancante");
+    }
+
+    const body = new URLSearchParams({
+      client_id: clientId,
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+    });
+
+    const endpoint = "https://accounts.spotify.com/api/token";
+
+    const response = await fetch(
+      endpoint,
+      {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body,
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      const err = data.error_description;
+      if (!err) {
+        throw new Error ("Errore Spotify");
+      }
+      throw new Error(err);
+    }
+
+    localStorage.setItem(
+        "spotify_access_token",
+        data.access_token,
+    );
+
+    if (data.refresh_token) {
+        localStorage.setItem(
+            "spotify_refresh_token",
+            data.refresh_token,
+        );
+    }
+
+    const expiresAt = Date.now() + data.expires_in * 1000;
+
+    localStorage.setItem(
+        "spotify_token_expires_at",
+        expiresAt.toString(),
+    );
+
+    return data.access_token;
+}
+export async function getValidSpotifyAccessToken() {
+  const accessToken = localStorage.getItem("spotify_access_token");
+
+  const expiresAt = Number(
+    localStorage.getItem("spotify_token_expires_at"),
+  );
+
+  const safetyWindowMs = 60 * 1000;
+
+  const isTokenValid =
+    accessToken &&
+    expiresAt > Date.now() + safetyWindowMs;
+
+  if (isTokenValid) {
+    return accessToken;
+  }
+
+  const refreshToken = localStorage.getItem(
+    "spotify_refresh_token",
+  );
+
+  if (refreshToken) {
+    return refreshSpotifyAccessToken();
+  }
+
+  return null;
+}

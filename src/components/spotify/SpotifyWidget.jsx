@@ -30,9 +30,23 @@ function formatTime(ms) {
 }
 
 function SpotifyWidget() {
+    const [spotifyCallback] = useState(() => {
+        const params = new URLSearchParams(window.location.search);
+
+        return {
+            code: params.get("code"),
+            error: params.get("error"),
+        };
+    });
+
     const [isConnecting, setIsConnecting] = useState(false);
     const [isControlling, setIsControlling] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(() =>
+        spotifyCallback.error
+            ? `Autorizzazione Spotify non riuscita: ${spotifyCallback.error}`
+            : null,
+    );
+    const [pollingError, setPollingError] = useState(null);
     const [currentTrack, setCurrentTrack] = useState(null);
     const [displayProgressMs, setDisplayProgressMs] = useState(0);
 
@@ -41,16 +55,9 @@ function SpotifyWidget() {
     );
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-
-        const code = params.get("code");
-        const spotifyError = params.get("error");
+        const { code, error: spotifyError } = spotifyCallback;
 
         if (spotifyError) {
-            setError(
-                `Autorizzazione Spotify non riuscita: ${spotifyError}`,
-            );
-
             window.history.replaceState({}, document.title, "/");
             return;
         }
@@ -95,7 +102,7 @@ function SpotifyWidget() {
         }
 
         completeSpotifyConnection();
-    }, []);
+    }, [spotifyCallback]);
 
     useEffect(() => {
         if (!isConnected) {
@@ -106,8 +113,13 @@ function SpotifyWidget() {
             try {
                 const track = await getCurrentlyPlayingTrack();
                 setCurrentTrack(track);
+                setDisplayProgressMs(track?.progressMs ?? 0);
+                setPollingError(null);
             } catch (err) {
-                console.error("Errore Spotify:", err);
+                setPollingError(
+                    err.message ||
+                        "Impossibile aggiornare la riproduzione.",
+                );
             }
         }
 
@@ -122,14 +134,6 @@ function SpotifyWidget() {
             clearInterval(intervalId);
         };
     }, [isConnected]);
-
-    useEffect(() => {
-        if (!currentTrack) {
-            return;
-        }
-
-        setDisplayProgressMs(currentTrack.progressMs);
-    }, [currentTrack]);
 
     useEffect(() => {
         if (!currentTrack || !currentTrack.isPlaying) {
@@ -165,6 +169,9 @@ function SpotifyWidget() {
                 await getCurrentlyPlayingTrack();
 
             setCurrentTrack(updatedTrack);
+            setDisplayProgressMs(
+                updatedTrack?.progressMs ?? 0,
+            );
         } catch (err) {
             setError(err.message);
         } finally {
@@ -213,11 +220,20 @@ function SpotifyWidget() {
 
             {isConnected && currentTrack && (
                 <div className="mt-4">
-                    <img
-                        src={currentTrack.imageUrl}
-                        alt=""
-                        className="h-16 w-16 rounded-xl object-cover"
-                    />
+                    {currentTrack.imageUrl ? (
+                        <img
+                            src={currentTrack.imageUrl}
+                            alt=""
+                            className="h-16 w-16 rounded-xl object-cover"
+                        />
+                    ) : (
+                        <div
+                            className="flex h-16 w-16 items-center justify-center rounded-xl bg-white/10 text-slate-400"
+                            aria-hidden="true"
+                        >
+                            <Music2 size={26} />
+                        </div>
+                    )}
 
                     <p className="mt-2 font-semibold text-slate-100">
                         {currentTrack.title}
@@ -337,11 +353,21 @@ function SpotifyWidget() {
 
             {isConnected &&
                 !currentTrack &&
-                !isConnecting && (
+                !isConnecting &&
+                !pollingError && (
                     <p className="mt-4 text-sm text-slate-400">
                         Nessuna traccia in riproduzione.
                     </p>
                 )}
+
+            {pollingError && (
+                <p
+                    role="status"
+                    className="mt-3 rounded-xl border border-amber-300/20 bg-amber-300/10 px-3 py-2 text-sm text-amber-200"
+                >
+                    {pollingError}
+                </p>
+            )}
 
             {error && (
                 <p

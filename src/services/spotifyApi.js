@@ -8,15 +8,13 @@ export async function getCurrentlyPlayingTrack() {
     }
 
     const response = await fetch(
-        "https://api.spotify.com/v1/me/player/currently-playing",
+        "https://api.spotify.com/v1/me/player/currently-playing?additional_types=track,episode",
         {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         },
     );
-    console.log("Spotify currently playing response:", response.status);
-
     if (response.status === 204) {
         return null;
     }
@@ -26,17 +24,51 @@ export async function getCurrentlyPlayingTrack() {
     }
 
     const data = await response.json();
+    const contentType =
+        data.currently_playing_type ?? data.item?.type;
 
-    console.log("Spotify raw data:", data)
+    if(!data.item) return null;
+
+    const isTrack = contentType === "track";
+    const isEpisode = contentType === "episode";
+
+    let title;
+    let artist;
+    let album;
+    let imageUrl;
+
+    if (isTrack) {
+        title = data.item.name ?? "Titolo non disponibile";
+        artist = data.item.artists
+            ?.map((artistItem) => artistItem.name)
+            .filter(Boolean)
+            .join(", ") || "Artista sconosciuto";
+        album = data.item.album?.name ?? "Album non disponibile";
+        imageUrl = data.item.album?.images?.[0]?.url ?? null;
+    } else if (isEpisode) {
+        title = data.item.name ?? "Episodio non disponibile";
+        artist =
+            data.item.show?.publisher ??
+            data.item.show?.name ??
+            "Autore sconosciuto";
+        album = data.item.show?.name ?? "Podcast";
+        imageUrl =
+            data.item.images?.[0]?.url ??
+            data.item.show?.images?.[0]?.url ??
+            null;
+    } else {
+        return null;
+    }
 
     return {
-        title: data.item.name,
-        artist: data.item.artists.map((artist) => artist.name).join(", "),
-        album: data.item.album.name,
-        imageUrl: data.item.album.images[0]?.url ?? null,
-        durationMs: data.item.duration_ms,
-        progressMs: data.progress_ms,
-        isPlaying: data.is_playing,
+        title,
+        artist,
+        album,
+        imageUrl,
+        durationMs: data.item.duration_ms ?? 0,
+        progressMs: data.progress_ms ?? 0,
+        isPlaying: Boolean(data.is_playing),
+        contentType,
     };
 }
 

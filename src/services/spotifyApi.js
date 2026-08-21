@@ -1,4 +1,3 @@
-import { InspectionPanel } from "lucide-react";
 import { getValidSpotifyAccessToken } from "./spotifyAuth";
 
 export async function getCurrentlyPlayingTrack() {
@@ -18,7 +17,7 @@ export async function getCurrentlyPlayingTrack() {
     );
     console.log("Spotify currently playing response:", response.status);
 
-    if (response === 204) {
+    if (response.status === 204) {
         return null;
     }
 
@@ -39,4 +38,92 @@ export async function getCurrentlyPlayingTrack() {
         progressMs: data.progress_ms,
         isPlaying: data.is_playing,
     };
+}
+
+export async function skipToNextTrack() {
+    const accessToken = await getValidSpotifyAccessToken();
+
+    if(!accessToken) throw new Error ("Token mancante");
+
+    const response = await fetch(
+        "https://api.spotify.com/v1/me/player/next",
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            method: "POST",
+        },
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            `Comando Spotify fallito: HTTP ${response.status}`,
+        );
+    }
+}
+
+export async function skipToPreviousTrack() {
+    const accessToken = await getValidSpotifyAccessToken();
+
+    if(!accessToken) throw new Error ("Token mancante");
+
+    const response = await fetch(
+        "https://api.spotify.com/v1/me/player/previous",
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            method: "POST",
+        },
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            `Comando Spotify fallito: HTTP ${response.status}`,
+        );
+    }
+}
+
+export async function resumePlayback() {
+    const accessToken = await getValidSpotifyAccessToken();
+
+    if(!accessToken) throw new Error ("Token mancante");
+
+    const response = await fetch(
+        "https://api.spotify.com/v1/me/player/play",
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            method: "PUT",
+        },
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            `Comando Spotify fallito: HTTP ${response.status}`,
+        );
+    }
+}
+
+export async function pausePlayback() {
+    const accessToken = await getValidSpotifyAccessToken();
+
+    if(!accessToken) throw new Error ("Token mancante");
+
+    const response = await fetch(
+        "https://api.spotify.com/v1/me/player/pause",
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            method: "PUT",
+        },
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            `Comando Spotify fallito: HTTP ${response.status}`,
+        );
+    }
 }

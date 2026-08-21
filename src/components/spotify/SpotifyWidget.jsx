@@ -1,17 +1,28 @@
 import { useEffect, useState } from "react";
-import { Music2 } from "lucide-react";
+import {
+    Music2,
+    Pause,
+    Play,
+    SkipBack,
+    SkipForward,
+} from "lucide-react";
 
 import {
-  exchangeSpotifyCode,
-  getValidSpotifyAccessToken,
-  redirectToSpotifyLogin,
+    exchangeSpotifyCode,
+    getValidSpotifyAccessToken,
+    redirectToSpotifyLogin,
 } from "../../services/spotifyAuth";
 
-import { getCurrentlyPlayingTrack } from "../../services/spotifyApi";
+import {
+    getCurrentlyPlayingTrack,
+    pausePlayback,
+    resumePlayback,
+    skipToNextTrack,
+    skipToPreviousTrack,
+} from "../../services/spotifyApi";
 
 function formatTime(ms) {
     const totalSeconds = Math.floor(ms / 1000);
-
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
 
@@ -20,24 +31,26 @@ function formatTime(ms) {
 
 function SpotifyWidget() {
     const [isConnecting, setIsConnecting] = useState(false);
+    const [isControlling, setIsControlling] = useState(false);
     const [error, setError] = useState(null);
     const [currentTrack, setCurrentTrack] = useState(null);
+    const [displayProgressMs, setDisplayProgressMs] = useState(0);
 
     const [isConnected, setIsConnected] = useState(
         () => Boolean(localStorage.getItem("spotify_access_token")),
     );
 
-    const [displayProgressMs, setDisplayProgressMs] = useState(0);
-
     useEffect(() => {
-        console.log("USE EFFECT SPOTIFY PARTITO");
         const params = new URLSearchParams(window.location.search);
 
         const code = params.get("code");
         const spotifyError = params.get("error");
 
         if (spotifyError) {
-            setError(`Autorizzazione Spotify non riuscita: ${spotifyError}`);
+            setError(
+                `Autorizzazione Spotify non riuscita: ${spotifyError}`,
+            );
+
             window.history.replaceState({}, document.title, "/");
             return;
         }
@@ -51,12 +64,6 @@ function SpotifyWidget() {
                     const token = await getValidSpotifyAccessToken();
 
                     setIsConnected(Boolean(token));
-
-                    if (token) {
-                        const track = await getCurrentlyPlayingTrack();
-                        console.log("TRACK TEST:", track);
-                        setCurrentTrack(track);
-                    }
                 } catch (err) {
                     setIsConnected(false);
                     setError(err.message);
@@ -64,6 +71,7 @@ function SpotifyWidget() {
                     setIsConnecting(false);
                 }
             }
+
             validateSpotifySession();
             return;
         }
@@ -87,7 +95,6 @@ function SpotifyWidget() {
         }
 
         completeSpotifyConnection();
-
     }, []);
 
     useEffect(() => {
@@ -100,13 +107,16 @@ function SpotifyWidget() {
                 const track = await getCurrentlyPlayingTrack();
                 setCurrentTrack(track);
             } catch (err) {
-                console.log("Errore Spotify: ", err);
+                console.error("Errore Spotify:", err);
             }
         }
 
         refreshCurrentTrack();
 
-        const intervalId = setInterval(refreshCurrentTrack, 5000);
+        const intervalId = setInterval(
+            refreshCurrentTrack,
+            5000,
+        );
 
         return () => {
             clearInterval(intervalId);
@@ -114,13 +124,17 @@ function SpotifyWidget() {
     }, [isConnected]);
 
     useEffect(() => {
-        if(!currentTrack) return;
+        if (!currentTrack) {
+            return;
+        }
 
         setDisplayProgressMs(currentTrack.progressMs);
     }, [currentTrack]);
 
     useEffect(() => {
-        if (!currentTrack || !currentTrack.isPlaying) return;
+        if (!currentTrack || !currentTrack.isPlaying) {
+            return;
+        }
 
         const intervalId = setInterval(() => {
             setDisplayProgressMs((previousProgress) =>
@@ -136,18 +150,55 @@ function SpotifyWidget() {
         };
     }, [currentTrack]);
 
-    const progressPercentage = 
+    async function handlePlaybackCommand(command) {
+        if (isControlling) {
+            return;
+        }
+
+        try {
+            setIsControlling(true);
+            setError(null);
+
+            await command();
+
+            const updatedTrack =
+                await getCurrentlyPlayingTrack();
+
+            setCurrentTrack(updatedTrack);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsControlling(false);
+        }
+    }
+
+    const progressPercentage =
         currentTrack?.durationMs > 0
             ? Math.min(
-                (displayProgressMs / currentTrack.durationMs) * 100,
+                (displayProgressMs /
+                    currentTrack.durationMs) *
+                    100,
                 100,
-              )
+            )
             : 0;
+
+    const secondaryControlClasses = [
+        "rounded-full p-2 text-slate-300 transition",
+        "hover:bg-white/10 hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-green-300",
+        "disabled:cursor-wait disabled:opacity-50",
+    ].join(" ");
 
     return (
         <section className="rounded-3xl border border-white/10 bg-slate-900/60 p-5">
             <div className="flex items-center gap-3">
-                <Music2 size={20} className="text-green-300" aria-hidden="true" />
+                <Music2
+                    size={20}
+                    className="text-green-300"
+                    aria-hidden="true"
+                />
 
                 <h2 className="text-base font-semibold text-slate-100">
                     Spotify
@@ -159,49 +210,138 @@ function SpotifyWidget() {
                     ? "Account Spotify collegato"
                     : "Collega il tuo account per controllare la riproduzione."}
             </p>
-                {isConnected && currentTrack && (
-                    <div className="mt-4">
-                        <img
-                            src={currentTrack.imageUrl}
-                            alt=""
-                            className="h-16 w-16 rounded-xl object-cover"
-                        />
 
-                        <p className="mt-2 font-semibold text-slate-100">
-                            {currentTrack.title}
-                        </p>
+            {isConnected && currentTrack && (
+                <div className="mt-4">
+                    <img
+                        src={currentTrack.imageUrl}
+                        alt=""
+                        className="h-16 w-16 rounded-xl object-cover"
+                    />
 
-                        <p className="text-sm text-slate-400">
-                            {currentTrack.artist}
-                        </p>
+                    <p className="mt-2 font-semibold text-slate-100">
+                        {currentTrack.title}
+                    </p>
 
-                        <div className="mt-3">
-                            <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-                                <div
-                                    className="h-full rounded-full bg-green-400 transition-[width] duration-300"
-                                    style={{ width: `${progressPercentage}%` }}
+                    <p className="text-sm text-slate-400">
+                        {currentTrack.artist}
+                    </p>
+
+                    <div className="mt-3 flex items-center justify-center gap-3">
+                        <button
+                            type="button"
+                            disabled={isControlling}
+                            onClick={() =>
+                                handlePlaybackCommand(
+                                    skipToPreviousTrack,
+                                )
+                            }
+                            aria-label="Brano precedente"
+                            className={secondaryControlClasses}
+                        >
+                            <SkipBack
+                                size={19}
+                                aria-hidden="true"
+                            />
+                        </button>
+
+                        <button
+                            type="button"
+                            disabled={isControlling}
+                            onClick={() =>
+                                handlePlaybackCommand(
+                                    currentTrack.isPlaying
+                                        ? pausePlayback
+                                        : resumePlayback,
+                                )
+                            }
+                            aria-label={
+                                currentTrack.isPlaying
+                                    ? "Metti in pausa"
+                                    : "Riprendi la riproduzione"
+                            }
+                            className={[
+                                "rounded-full bg-green-400 p-2.5",
+                                "text-slate-950 transition",
+                                "hover:bg-green-300",
+                                "focus-visible:outline-none",
+                                "focus-visible:ring-2",
+                                "focus-visible:ring-green-200",
+                                "focus-visible:ring-offset-2",
+                                "focus-visible:ring-offset-slate-900",
+                                "disabled:cursor-wait",
+                                "disabled:opacity-50",
+                            ].join(" ")}
+                        >
+                            {currentTrack.isPlaying ? (
+                                <Pause
+                                    size={20}
+                                    aria-hidden="true"
                                 />
-                            </div>
+                            ) : (
+                                <Play
+                                    size={20}
+                                    aria-hidden="true"
+                                />
+                            )}
+                        </button>
 
-                            <div className="mt-1.5 flex justify-between text-xs text-slate-500">
-                                <span>{formatTime(displayProgressMs)}</span>
-                                <span>{formatTime(currentTrack.durationMs)}</span>
-                            </div>
+                        <button
+                            type="button"
+                            disabled={isControlling}
+                            onClick={() =>
+                                handlePlaybackCommand(
+                                    skipToNextTrack,
+                                )
+                            }
+                            aria-label="Brano successivo"
+                            className={secondaryControlClasses}
+                        >
+                            <SkipForward
+                                size={19}
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </div>
+
+                    <div className="mt-3">
+                        <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                            <div
+                                className="h-full rounded-full bg-green-400 transition-[width] duration-300"
+                                style={{
+                                    width: `${progressPercentage}%`,
+                                }}
+                            />
                         </div>
 
-                        <p className="mt-1 text-xs text-slate-500">
-                            {currentTrack.isPlaying ? "In riproduzione" : "In pausa"}
-                        </p>
+                        <div className="mt-1.5 flex justify-between text-xs text-slate-500">
+                            <span>
+                                {formatTime(displayProgressMs)}
+                            </span>
 
+                            <span>
+                                {formatTime(
+                                    currentTrack.durationMs,
+                                )}
+                            </span>
+                        </div>
                     </div>
-                )}
 
-                {isConnected && !currentTrack && !isConnecting && (
+                    <p className="mt-1 text-xs text-slate-500">
+                        {currentTrack.isPlaying
+                            ? "In riproduzione"
+                            : "In pausa"}
+                    </p>
+                </div>
+            )}
+
+            {isConnected &&
+                !currentTrack &&
+                !isConnecting && (
                     <p className="mt-4 text-sm text-slate-400">
                         Nessuna traccia in riproduzione.
                     </p>
                 )}
-            
 
             {error && (
                 <p
@@ -213,13 +353,15 @@ function SpotifyWidget() {
             )}
 
             {!isConnected && (
-                <button 
-                    type="button" 
+                <button
+                    type="button"
                     disabled={isConnecting}
                     onClick={redirectToSpotifyLogin}
                     className="mt-4 rounded-xl bg-green-400 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:cursor-wait disabled:opacity-60"
                 >
-                    {isConnecting ? "Collegamento..." : "Collega Spotify"}
+                    {isConnecting
+                        ? "Collegamento..."
+                        : "Collega Spotify"}
                 </button>
             )}
         </section>

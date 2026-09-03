@@ -5,28 +5,25 @@ const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 const DEFAULT_CITY =
   import.meta.env.VITE_DEFAULT_WEATHER_CITY || "Frossasco";
 
-export async function fetchWeatherByCity(city = DEFAULT_CITY) {
+async function fetchWeather (params, signal, locationLabel) {
     if (!API_KEY) {
         throw new Error("Chiave OpenWeatherMap non configurata");
     }
 
-    const normalizedCity =
-    typeof city === "string" && city.trim()
-        ? city.trim()
-        : DEFAULT_CITY;
-
     const url = new URL(WEATHER_API_URL);
 
-    url.searchParams.set("q", normalizedCity);
+    for (const [key, value] of Object.entries(params)) {
+        url.searchParams.set(key, value);
+    }
     url.searchParams.set("appid", API_KEY);
     url.searchParams.set("units", "metric");
     url.searchParams.set("lang", "it");
 
-    const response = await fetch(url);
+    const response = await fetch(url, { signal });
 
     if (!response.ok) {
     if (response.status === 404) {
-        throw new Error(`Città "${normalizedCity}" non trovata`);
+        throw new Error(`Meteo non trovato per "${locationLabel}"`);
     }
 
     if (response.status === 401) {
@@ -58,7 +55,7 @@ export async function fetchWeatherByCity(city = DEFAULT_CITY) {
     }
 
     const normalizedWeather = {
-        location: data.name ?? normalizedCity,
+        location: data.name || locationLabel,
         temperature: Math.round(main.temp),
         minTemperature: Math.round(main.temp_min),
         maxTemperature: Math.round(main.temp_max),
@@ -68,5 +65,37 @@ export async function fetchWeatherByCity(city = DEFAULT_CITY) {
     };
 
     return normalizedWeather;
+}
+
+export function fetchWeatherByCity(city = DEFAULT_CITY, signal) {
+  const normalizedCity =
+    typeof city === "string" && city.trim()
+      ? city.trim()
+      : DEFAULT_CITY;
+
+  return fetchWeather(
+    { q: normalizedCity },
+    signal,
+    normalizedCity
+  );
+}
+
+export async function fetchWeatherByCoords(latitude, longitude, signal) {
+  if (
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude) ||
+    latitude < -90 ||
+    latitude > 90 ||
+    longitude < -180 ||
+    longitude > 180
+  ) {
+    throw new Error("Coordinate geografiche non valide");
+  }
+
+  return fetchWeather(
+    { lat: latitude, lon: longitude },
+    signal,
+    "Posizione attuale"
+  );
 }
 

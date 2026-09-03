@@ -2,12 +2,12 @@ import {
   BarChart3,
   CalendarDays,
   CheckSquare,
-  CloudSun,
   Timer,
 } from "lucide-react";
 
 import F1Widget from "../formula1/F1Widget";
 import SpotifyWidget from "../spotify/SpotifyWidget";
+import WeatherWidget from "../weather/WeatherWidget";
 
 const placeholderWidgets = {
   tasks: {
@@ -33,12 +33,6 @@ const placeholderWidgets = {
     description: "Tempo studiato per materia",
     icon: BarChart3,
     accent: "text-emerald-300 bg-emerald-400/10 border-emerald-400/20",
-  },
-  weather: {
-    title: "Meteo",
-    description: "Previsioni e prossime ore",
-    icon: CloudSun,
-    accent: "text-cyan-300 bg-cyan-400/10 border-cyan-400/20",
   },
 };
 
@@ -121,10 +115,7 @@ function DashboardHome({
       <aside className="grid min-w-0 content-start gap-5">
         <SpotifyWidget />
 
-        <WidgetPlaceholder
-          widget={placeholderWidgets.weather}
-          className="min-h-56"
-        />
+        <WeatherWidget/>
 
         {f1Loading ? (
           <F1StatusCard

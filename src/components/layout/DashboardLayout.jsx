@@ -8,10 +8,10 @@ function DashboardLayout({
 }) {
   return (
     <div className="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
-      <div className="flex min-h-screen w-full">
-        <aside className="w-64 shrink-0 border-r border-slate-800 bg-slate-900">
-          <div className="p-6">
-            <div className="mb-6">
+      <div className="flex min-h-screen w-full flex-col md:flex-row">
+        <aside className="w-full shrink-0 border-b border-slate-800 bg-slate-900 md:w-64 md:border-b-0 md:border-r">
+          <div className="p-4 md:p-6">
+            <div className="mb-4 md:mb-6">
               <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
                 Centro di controllo
               </p>

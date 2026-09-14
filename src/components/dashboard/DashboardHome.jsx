@@ -1,21 +1,15 @@
 import {
   BarChart3,
   CalendarDays,
-  CheckSquare,
   Timer,
 } from "lucide-react";
 
 import F1Widget from "../formula1/F1Widget";
 import SpotifyWidget from "../spotify/SpotifyWidget";
 import WeatherWidget from "../weather/WeatherWidget";
+import TaskOverviewWidget from "../tasks/TaskOverviewWidget";
 
 const placeholderWidgets = {
-  tasks: {
-    title: "Task Manager",
-    description: "Attività e priorità di oggi",
-    icon: CheckSquare,
-    accent: "text-sky-300 bg-sky-400/10 border-sky-400/20",
-  },
   pomodoro: {
     title: "Timer Pomodoro",
     description: "Sessione di studio corrente",
@@ -88,6 +82,9 @@ function F1StatusCard({ title, message, tone = "neutral" }) {
 }
 
 function DashboardHome({
+  tasks,
+  onToggleTask,
+  onOpenTasks,
   f1Data,
   f1Loading = false,
   f1Error = null,
@@ -96,7 +93,11 @@ function DashboardHome({
     <div className="mx-auto grid w-full max-w-[1600px] gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
       <div className="grid min-w-0 gap-5">
         <div className="grid gap-5 md:grid-cols-[1.15fr_0.85fr]">
-          <WidgetPlaceholder widget={placeholderWidgets.tasks} />
+          <TaskOverviewWidget
+            tasks={tasks}
+            onToggleTask={onToggleTask}
+            onOpenTasks={onOpenTasks}
+          />
           <WidgetPlaceholder widget={placeholderWidgets.pomodoro} />
         </div>
 

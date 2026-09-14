@@ -16,10 +16,10 @@ if [[ ! -f package.json ]]; then
     exit 1
 fi
 
-echo "Avvio Dashboard Quinta su http://127.0.0.1:5173"
+echo "Avvio Dashboard Quinta su http://127.0.0.1:5175"
 
 npm run dev -- \
     --host 127.0.0.1 \
-    --port 5173 \
+    --port 5175 \
     --strictPort \
     --open

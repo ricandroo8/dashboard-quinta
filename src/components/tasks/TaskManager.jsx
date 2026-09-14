@@ -1,11 +1,10 @@
 import { ClipboardList } from 'lucide-react';
 import { useState } from 'react';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import TaskForm from './TaskForm';
 import TaskItem from './TaskItem';
+import { sortTasksByPriority } from "../../utils/tasks";
 
-function TaskManager() {
-    const [tasks, setTasks] = useLocalStorage('dashboard_tasks', []);
+function TaskManager({ tasks, setTasks, onToggleTask }) {    
     const [activeFilter, setActiveFilter] = useState('all');
     const [editingTask, setEditingTask] = useState(null);
 
@@ -29,26 +28,6 @@ function TaskManager() {
 
     function handleCancelEdit() {
         setEditingTask(null);
-    }
-
-    function handleToggleTask(taskId) {
-        setTasks((currentTasks) =>
-            currentTasks.map((task) => {
-                if (task.id !== taskId) {
-                    return task;
-                }
-
-                const nextCompletedState = !task.completed;
-
-                return {
-                    ...task,
-                    completed: nextCompletedState,
-                    completedAt: nextCompletedState
-                        ? new Date().toISOString()
-                        : null,
-                };
-            })
-        );
     }
 
     function handleDeleteTask(taskId) {
@@ -77,39 +56,7 @@ function TaskManager() {
         return true;
     });
 
-    const sortedTasks = [...filteredTasks].sort((firstTask, secondTask) => {
-        if (firstTask.completed !== secondTask.completed) {
-            return Number(firstTask.completed) - Number(secondTask.completed);
-        }
-
-        const firstPriority = Number(firstTask.isUrgent) + Number(firstTask.isImportant);
-
-        const secondPriority = Number(secondTask.isUrgent) + Number(secondTask.isImportant);
-
-        if(firstPriority !== secondPriority) {
-            return secondPriority - firstPriority;
-        }
-
-        if (firstTask.dueDate && secondTask.dueDate) {
-            return (
-                new Date(firstTask.dueDate).getTime() -
-                new Date(secondTask.dueDate).getTime()
-            );
-        }
-
-        if (firstTask.dueDate) {
-            return -1;
-        }
-        
-        if (secondTask.dueDate) {
-            return 1;
-        }
-
-        return (
-            new Date(firstTask.createdAt).getTime() -
-            new Date(secondTask.createdAt).getTime()
-        );
-    })
+    const sortedTasks = sortTasksByPriority(filteredTasks);
 
     return (
         <section className="space-y-6">
@@ -237,7 +184,7 @@ function TaskManager() {
                                 <TaskItem
                                     key={task.id}
                                     task={task}
-                                    onToggle={handleToggleTask}
+                                    onToggle={onToggleTask}
                                     onDelete={handleDeleteTask}
                                     onEdit={handleEditTask}
                                 />

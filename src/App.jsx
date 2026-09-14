@@ -9,10 +9,12 @@ import QuickNotesHub from "./components/quick-notes/QuickNotesHub";
 
 import useICal from "./hooks/useICal";
 import useF1Data from './hooks/useF1Data';
+import useLocalStorage from './hooks/useLocalStorage';
 
 export default function App() {
 
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [tasks, setTasks] = useLocalStorage("dashboard_tasks", []);
 
   const {
     events: calendarEvents,
@@ -35,6 +37,31 @@ export default function App() {
         constructors,
       }
     : null;
+
+  
+  function handleToggleTask(taskId) {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) => {
+        if (task.id !== taskId) {
+          return task;
+        }
+
+        const nextCompletedState = !task.completed;
+
+        return {
+          ...task,
+          completed: nextCompletedState,
+          completedAt: nextCompletedState
+            ? new Date().toISOString()
+            : null,
+        };
+      })
+    );
+  }
+
+  function handleOpenTasks() {
+    setActiveSection("tasks");
+  }
   
 
   return (
@@ -44,13 +71,22 @@ export default function App() {
     >
       {activeSection === 'dashboard' && (
         <DashboardHome
+          tasks={tasks}
+          onToggleTask={handleToggleTask}
+          onOpenTasks={handleOpenTasks}
           f1Data={f1Data}
           f1Loading={f1Loading}
           f1Error={f1Error}
         />
       )}
 
-      {activeSection === 'tasks' && <TaskManager />}
+      {activeSection === "tasks" && (
+        <TaskManager
+        tasks={tasks}
+        setTasks={setTasks}
+        onToggleTask={handleToggleTask}
+      />
+      )}
       {activeSection === 'pomodoro' && <PomodoroTimer />}
       {activeSection === 'calendar' && (
         <CalendarWidget

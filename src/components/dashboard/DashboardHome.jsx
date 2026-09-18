@@ -1,21 +1,15 @@
 import {
   BarChart3,
   CalendarDays,
-  Timer,
 } from "lucide-react";
 
 import F1Widget from "../formula1/F1Widget";
 import SpotifyWidget from "../spotify/SpotifyWidget";
 import WeatherWidget from "../weather/WeatherWidget";
 import TaskOverviewWidget from "../tasks/TaskOverviewWidget";
+import PomodoroOverviewWidget from "../pomodoro/PomodoroOverviewWidget";
 
 const placeholderWidgets = {
-  pomodoro: {
-    title: "Timer Pomodoro",
-    description: "Sessione di studio corrente",
-    icon: Timer,
-    accent: "text-rose-300 bg-rose-400/10 border-rose-400/20",
-  },
   calendar: {
     title: "Calendario scadenze",
     description: "Verifiche, consegne e interrogazioni",
@@ -85,6 +79,10 @@ function DashboardHome({
   tasks,
   onToggleTask,
   onOpenTasks,
+  pomodoroConfig,
+  pomodoroState,
+  setPomodoroState,
+  onOpenPomodoro,
   f1Data,
   f1Loading = false,
   f1Error = null,
@@ -98,7 +96,12 @@ function DashboardHome({
             onToggleTask={onToggleTask}
             onOpenTasks={onOpenTasks}
           />
-          <WidgetPlaceholder widget={placeholderWidgets.pomodoro} />
+          <PomodoroOverviewWidget
+            pomodoroConfig={pomodoroConfig}
+            pomodoroState={pomodoroState}
+            setPomodoroState={setPomodoroState}
+            onOpenPomodoro={onOpenPomodoro}
+          />
         </div>
 
         <div className="grid gap-5 md:grid-cols-[1.35fr_0.65fr]">

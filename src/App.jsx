@@ -11,10 +11,35 @@ import useICal from "./hooks/useICal";
 import useF1Data from './hooks/useF1Data';
 import useLocalStorage from './hooks/useLocalStorage';
 
+import {
+  POMODORO_DEFAULTS,
+  POMODORO_MODES,
+} from "./constants/pomodoro";
+
 export default function App() {
 
   const [activeSection, setActiveSection] = useState('dashboard');
   const [tasks, setTasks] = useLocalStorage("dashboard_tasks", []);
+  const [pomodoroConfig, setPomodoroConfig] = useLocalStorage(
+    "dashboard_pomodoro_config",
+    {
+      workDurationMinutes: POMODORO_DEFAULTS.workDurationMinutes,
+      shortBreakMinutes: POMODORO_DEFAULTS.shortBreakMinutes,
+      longBreakMinutes: POMODORO_DEFAULTS.longBreakMinutes,
+    },
+  );
+
+  const [pomodoroState, setPomodoroState] = useLocalStorage(
+    "dashboard_pomodoro_state",
+    {
+      mode: POMODORO_MODES.WORK,
+      selectedSubjectId: "",
+      isRunning: false,
+      completedCycles: 0,
+      targetEndTimestamp: null,
+      remainingSecondsOnPause: null,
+    },
+  );
 
   const {
     events: calendarEvents,
@@ -62,6 +87,10 @@ export default function App() {
   function handleOpenTasks() {
     setActiveSection("tasks");
   }
+
+  function handleOpenPomodoro() {
+    setActiveSection("pomodoro");
+  }
   
 
   return (
@@ -74,6 +103,10 @@ export default function App() {
           tasks={tasks}
           onToggleTask={handleToggleTask}
           onOpenTasks={handleOpenTasks}
+          pomodoroConfig={pomodoroConfig}
+          pomodoroState={pomodoroState}
+          setPomodoroState={setPomodoroState}
+          onOpenPomodoro={handleOpenPomodoro}
           f1Data={f1Data}
           f1Loading={f1Loading}
           f1Error={f1Error}
@@ -87,7 +120,14 @@ export default function App() {
         onToggleTask={handleToggleTask}
       />
       )}
-      {activeSection === 'pomodoro' && <PomodoroTimer />}
+      {activeSection === "pomodoro" && (
+        <PomodoroTimer
+          pomodoroConfig={pomodoroConfig}
+          setPomodoroConfig={setPomodoroConfig}
+          pomodoroState={pomodoroState}
+          setPomodoroState={setPomodoroState}
+        />
+      )}
       {activeSection === 'calendar' && (
         <CalendarWidget
           events={calendarEvents}

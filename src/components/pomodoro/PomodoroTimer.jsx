@@ -26,27 +26,12 @@ const getModeDurationSeconds = (mode, config) => {
   return config.workDurationMinutes * 60;
 };
 
-function PomodoroTimer() {
-  const [pomodoroConfig, setPomodoroConfig] = useLocalStorage(
-    "dashboard_pomodoro_config",
-    {
-      workDurationMinutes: POMODORO_DEFAULTS.workDurationMinutes,
-      shortBreakMinutes: POMODORO_DEFAULTS.shortBreakMinutes,
-      longBreakMinutes: POMODORO_DEFAULTS.longBreakMinutes,
-    },
-  );
-
-  const [pomodoroState, setPomodoroState] = useLocalStorage(
-    "dashboard_pomodoro_state",
-    {
-      mode: POMODORO_MODES.WORK,
-      selectedSubjectId: "",
-      isRunning: false,
-      completedCycles: 0,
-      targetEndTimestamp: null,
-      remainingSecondsOnPause: null,
-    },
-  );
+function PomodoroTimer({
+  pomodoroConfig,
+  setPomodoroConfig,
+  pomodoroState,
+  setPomodoroState,
+}) {
 
   const [mode, setMode] = useState(
     pomodoroState.mode ?? POMODORO_MODES.WORK,

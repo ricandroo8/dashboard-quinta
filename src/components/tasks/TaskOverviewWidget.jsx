@@ -59,13 +59,20 @@ function TaskOverviewWidget({
   const dashboardTasks = getDashboardTasks(safeTasks);
 
   return (
-    <section className="relative min-w-0 overflow-hidden rounded-3xl border border-sky-300/15 bg-slate-900/60 p-5 shadow-xl shadow-black/10 backdrop-blur-md">
+    <section className="group relative min-w-0 cursor-pointer overflow-hidden rounded-3xl border border-sky-300/15 bg-slate-900/60 p-5 shadow-xl shadow-black/10 backdrop-blur-md transition hover:border-sky-300/30 hover:bg-slate-900/75">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-400/[0.06] to-transparent"
       />
 
-      <div className="relative">
+      <button
+        type="button"
+        onClick={onOpenTasks}
+        aria-label="Apri la sezione Attività"
+        className="absolute inset-0 z-10 rounded-3xl focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-400/40"
+      />
+
+      <div className="pointer-events-none relative z-20">
         <header className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-sky-400/20 bg-sky-400/10 text-sky-300">
@@ -77,7 +84,7 @@ function TaskOverviewWidget({
                 <button
                   type="button"
                   onClick={onOpenTasks}
-                  className="rounded text-base font-semibold text-slate-100 transition hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                  className="pointer-events-auto relative z-30 rounded text-base font-semibold text-slate-100 transition hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
                 >
                   Attività
                 </button>
@@ -121,7 +128,7 @@ function TaskOverviewWidget({
                     type="button"
                     onClick={() => onToggleTask(task.id)}
                     aria-label={`Segna "${task.title}" come completato`}
-                    className="mt-0.5 shrink-0 rounded-full text-slate-500 transition hover:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                    className="pointer-events-auto relative z-30 mt-0.5 shrink-0 rounded-full text-slate-500 transition hover:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
                   >
                     <Circle size={18} aria-hidden="true" />
                   </button>
@@ -130,7 +137,7 @@ function TaskOverviewWidget({
                     <button
                       type="button"
                       onClick={onOpenTasks}
-                      className="block max-w-full truncate rounded text-left text-sm font-medium text-slate-100 transition hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                      className="pointer-events-auto relative z-30 block max-w-full truncate rounded text-left text-sm font-medium text-slate-100 transition hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
                     >
                       {task.title}
                     </button>

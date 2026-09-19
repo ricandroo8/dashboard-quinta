@@ -1,33 +1,13 @@
 import { SUBJECT_LABELS } from "../../constants/subjects";
+import { summarizeStudySessionsForDate } from "../../utils/studySessions";
 
 function StudySummary({ studySessions }) {
-  const today = new Date().toDateString();
-
-  const todaySessions = studySessions.filter((session) => {
-    return new Date(session.completedAt).toDateString() === today;
-  });
-
-  const todayMinutes = todaySessions.reduce(
-    (total, session) => {
-      return total + session.durationMinutes;
-    },
-    0,
-  );
-
-  const minutesBySubject = todaySessions.reduce(
-    (accumulator, session) => {
-      const subjectId = session.subjectId;
-
-      accumulator[subjectId] =
-        (accumulator[subjectId] || 0) +
-        session.durationMinutes;
-
-      return accumulator;
-    },
-    {},
-  );
-
-  const subjectEntries = Object.entries(minutesBySubject);
+  const {
+    sessionCount,
+    totalMinutes,
+    minutesBySubject,
+    subjects,
+  } = summarizeStudySessionsForDate(studySessions);
 
   const maxMinutes = Math.max(
     ...Object.values(minutesBySubject),
@@ -49,7 +29,7 @@ function StudySummary({ studySessions }) {
       <div className="mb-6 grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-white/5 bg-white/5 p-4">
           <p className="text-2xl font-semibold text-white">
-            {todaySessions.length}
+            {sessionCount}
           </p>
 
           <p className="mt-1 text-sm text-slate-400">
@@ -59,7 +39,7 @@ function StudySummary({ studySessions }) {
 
         <div className="rounded-xl border border-white/5 bg-white/5 p-4">
           <p className="text-2xl font-semibold text-white">
-            {todayMinutes}
+            {totalMinutes}
           </p>
 
           <p className="mt-1 text-sm text-slate-400">
@@ -73,7 +53,7 @@ function StudySummary({ studySessions }) {
           Tempo per materia
         </p>
 
-        {subjectEntries.length === 0 ? (
+        {subjects.length === 0 ? (
           <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] p-4">
             <p className="text-sm leading-relaxed text-slate-500">
               Completa una sessione per visualizzare la distribuzione dello
@@ -82,7 +62,7 @@ function StudySummary({ studySessions }) {
           </div>
         ) : (
           <div className="space-y-5">
-            {subjectEntries.map(([subjectId, minutes]) => {
+            {subjects.map(({ subjectId, minutes }) => {
               const percentage =
                 (minutes / maxMinutes) * 100;
 

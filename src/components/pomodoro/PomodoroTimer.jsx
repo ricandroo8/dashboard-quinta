@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { RotateCcw, Trash2 } from "lucide-react";
 
-import pomodoroCompleteSound from "../../assets/pomodoro-complete.wav";
-import useLocalStorage from "../../hooks/useLocalStorage";
-
 import { SUBJECTS } from "../../constants/subjects";
 
 import {
@@ -31,15 +28,13 @@ function PomodoroTimer({
   setPomodoroConfig,
   pomodoroState,
   setPomodoroState,
+  studySessions,
 }) {
+  const mode =
+    pomodoroState.mode ?? POMODORO_MODES.WORK;
 
-  const [mode, setMode] = useState(
-    pomodoroState.mode ?? POMODORO_MODES.WORK,
-  );
-
-  const [selectedSubjectId, setSelectedSubjectId] = useState(
-    pomodoroState.selectedSubjectId ?? "",
-  );
+  const selectedSubjectId =
+    pomodoroState.selectedSubjectId ?? "";
 
   const [secondsLeft, setSecondsLeft] = useState(() => {
     if (pomodoroState.isRunning && pomodoroState.targetEndTimestamp) {
@@ -60,108 +55,29 @@ function PomodoroTimer({
     );
   });
 
-  const [isRunning, setIsRunning] = useState(
-    pomodoroState.isRunning ?? false,
-  );
+  const isRunning =
+    pomodoroState.isRunning ?? false;
 
-  const [completedCycles, setCompletedCycles] = useState(
-    pomodoroState.completedCycles ?? 0,
-  );
+  const completedCycles =
+    pomodoroState.completedCycles ?? 0;
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [studySessions, setStudySessions] = useLocalStorage(
-    "dashboard_study_sessions",
-    [],
-  );
 
-  const minutes = Math.floor(secondsLeft / 60);
-  const seconds = secondsLeft % 60;
+  const displayedSecondsLeft = isRunning
+    ? secondsLeft
+    : typeof pomodoroState.remainingSecondsOnPause === "number"
+      ? pomodoroState.remainingSecondsOnPause
+      : getModeDurationSeconds(mode, pomodoroConfig);
+
+  const minutes = Math.floor(displayedSecondsLeft / 60);
+  const seconds = displayedSecondsLeft % 60;
 
   const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
     seconds,
   ).padStart(2, "0")}`;
 
-  const registerStudySession = () => {
-    const newSession = {
-      id: `ses-${Date.now()}`,
-      subjectId: selectedSubjectId,
-      durationMinutes: pomodoroConfig.workDurationMinutes,
-      completedAt: new Date().toISOString(),
-      type: "POMODORO",
-    };
-
-    setStudySessions((currentSessions) => [
-      ...currentSessions,
-      newSession,
-    ]);
-  };
-
-  const playCompletionSound = () => {
-    const audio = new Audio(pomodoroCompleteSound);
-
-    audio.play().catch((error) => {
-      console.warn("Impossibile riprodurre il suono:", error);
-    });
-  };
-
-  const handleTimerComplete = () => {
-    playCompletionSound();
-
-    if (mode === POMODORO_MODES.WORK) {
-      registerStudySession();
-
-      const nextCycle = completedCycles + 1;
-
-      setCompletedCycles(nextCycle);
-
-      if (nextCycle % POMODORO_DEFAULTS.longBreakInterval === 0) {
-        setMode(POMODORO_MODES.LONG_BREAK);
-
-        setSecondsLeft(
-          getModeDurationSeconds(
-            POMODORO_MODES.LONG_BREAK,
-            pomodoroConfig,
-          ),
-        );
-
-        return;
-      }
-
-      setMode(POMODORO_MODES.SHORT_BREAK);
-
-      setSecondsLeft(
-        getModeDurationSeconds(
-          POMODORO_MODES.SHORT_BREAK,
-          pomodoroConfig,
-        ),
-      );
-
-      return;
-    }
-
-    if (
-      mode === POMODORO_MODES.SHORT_BREAK ||
-      mode === POMODORO_MODES.LONG_BREAK
-    ) {
-      setMode(POMODORO_MODES.WORK);
-
-      // La materia viene azzerata solo dopo la pausa,
-      // quando deve iniziare una nuova sessione di studio.
-      setSelectedSubjectId("");
-
-      setSecondsLeft(
-        getModeDurationSeconds(
-          POMODORO_MODES.WORK,
-          pomodoroConfig,
-        ),
-      );
-    }
-  };
-
   const handleResetTimer = () => {
-    setIsRunning(false);
-
     setSecondsLeft(
       getModeDurationSeconds(mode, pomodoroConfig),
     );
@@ -205,22 +121,6 @@ function PomodoroTimer({
   };
 
   useEffect(() => {
-    setPomodoroState((currentState) => ({
-      ...currentState,
-      mode,
-      selectedSubjectId,
-      isRunning,
-      completedCycles,
-    }));
-  }, [
-    mode,
-    selectedSubjectId,
-    isRunning,
-    completedCycles,
-    setPomodoroState,
-  ]);
-
-  useEffect(() => {
     if (!isRunning) {
       return;
     }
@@ -233,23 +133,6 @@ function PomodoroTimer({
 
     return () => clearInterval(intervalId);
   }, [isRunning]);
-
-  useEffect(() => {
-    if (!isRunning || secondsLeft > 0) {
-      return;
-    }
-
-    setIsRunning(false);
-
-    setPomodoroState((currentState) => ({
-      ...currentState,
-      isRunning: false,
-      targetEndTimestamp: null,
-      remainingSecondsOnPause: null,
-    }));
-
-    handleTimerComplete();
-  }, [isRunning, secondsLeft]);
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
@@ -278,7 +161,10 @@ function PomodoroTimer({
           <select
             value={selectedSubjectId}
             onChange={(event) => {
-              setSelectedSubjectId(event.target.value);
+              setPomodoroState((currentState) => ({
+                ...currentState,
+                selectedSubjectId: event.target.value,
+              }));
               setErrorMessage("");
             }}
             disabled={
@@ -324,7 +210,7 @@ function PomodoroTimer({
 
                 if (!isRunning) {
                   const targetEndTimestamp =
-                    Date.now() + secondsLeft * 1000;
+                    Date.now() + displayedSecondsLeft * 1000;
 
                   setPomodoroState((currentState) => ({
                     ...currentState,
@@ -333,19 +219,16 @@ function PomodoroTimer({
                     isRunning: true,
                   }));
 
-                  setIsRunning(true);
-
                   return;
                 }
 
                 setPomodoroState((currentState) => ({
                   ...currentState,
                   targetEndTimestamp: null,
-                  remainingSecondsOnPause: secondsLeft,
+                  remainingSecondsOnPause: displayedSecondsLeft,
                   isRunning: false,
                 }));
 
-                setIsRunning(false);
               }}
               className="flex-1 rounded-xl bg-white px-4 py-3 font-medium text-slate-950 transition hover:bg-slate-200"
             >

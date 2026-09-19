@@ -135,3 +135,21 @@ export function normalizeCalendarEvent(event) {
       detectSubjectId(rawTitle),
   };
 }
+
+export function getDashboardCalendarEvents(
+  events,
+  limit = 3,
+  referenceDate = new Date(),
+) {
+  const normalizedEvents = events.map(normalizeCalendarEvent);
+  const futureEvents = filterEventsFromDate(
+    normalizedEvents,
+    referenceDate,
+  );
+
+  return sortEventsByDate(
+    futureEvents.filter(
+      (event) => event.type !== CALENDAR_EVENT_TYPES.SCHEDULE,
+    ),
+  ).slice(0, limit);
+}

@@ -1,65 +1,10 @@
-import {
-  BarChart3,
-  CalendarDays,
-} from "lucide-react";
-
+import CalendarOverviewWidget from "../calendar/CalendarOverviewWidget";
 import F1Widget from "../formula1/F1Widget";
 import SpotifyWidget from "../spotify/SpotifyWidget";
 import WeatherWidget from "../weather/WeatherWidget";
 import TaskOverviewWidget from "../tasks/TaskOverviewWidget";
 import PomodoroOverviewWidget from "../pomodoro/PomodoroOverviewWidget";
-
-const placeholderWidgets = {
-  calendar: {
-    title: "Calendario scadenze",
-    description: "Verifiche, consegne e interrogazioni",
-    icon: CalendarDays,
-    accent: "text-violet-300 bg-violet-400/10 border-violet-400/20",
-  },
-  tracker: {
-    title: "Tracker studio",
-    description: "Tempo studiato per materia",
-    icon: BarChart3,
-    accent: "text-emerald-300 bg-emerald-400/10 border-emerald-400/20",
-  },
-};
-
-function WidgetPlaceholder({ widget, className = "" }) {
-  const Icon = widget.icon;
-
-  return (
-    <section
-      className={`group relative flex min-h-44 flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-900/60 p-5 shadow-xl shadow-black/10 ${className}`}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.035] to-transparent" />
-
-      <div className="relative flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <h2 className="truncate text-base font-semibold text-slate-100">
-            {widget.title}
-          </h2>
-          <p className="mt-1 text-sm text-slate-500">
-            {widget.description}
-          </p>
-        </div>
-
-        <span
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border ${widget.accent}`}
-        >
-          <Icon size={19} aria-hidden="true" />
-        </span>
-      </div>
-
-      <div className="relative mt-auto pt-8">
-        <div className="rounded-2xl border border-dashed border-white/10 bg-black/10 px-4 py-3">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-slate-600">
-            Widget in preparazione
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
+import StudyOverviewWidget from "../pomodoro/StudyOverviewWidget";
 
 function F1StatusCard({ title, message, tone = "neutral" }) {
   const toneClasses =
@@ -83,13 +28,18 @@ function DashboardHome({
   pomodoroState,
   setPomodoroState,
   onOpenPomodoro,
+  studySessions,
+  calendarEvents,
+  calendarLoading = false,
+  calendarError = null,
+  onOpenCalendar,
   f1Data,
   f1Loading = false,
   f1Error = null,
 }) {
   return (
     <div className="mx-auto grid w-full max-w-[1600px] gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
-      <div className="grid min-w-0 gap-5">
+      <div className="grid min-w-0 content-start gap-5">
         <div className="grid gap-5 md:grid-cols-[1.15fr_0.85fr]">
           <TaskOverviewWidget
             tasks={tasks}
@@ -105,13 +55,15 @@ function DashboardHome({
         </div>
 
         <div className="grid gap-5 md:grid-cols-[1.35fr_0.65fr]">
-          <WidgetPlaceholder
-            widget={placeholderWidgets.calendar}
-            className="min-h-80"
+          <CalendarOverviewWidget
+            events={calendarEvents}
+            loading={calendarLoading}
+            error={calendarError}
+            onOpenCalendar={onOpenCalendar}
           />
-          <WidgetPlaceholder
-            widget={placeholderWidgets.tracker}
-            className="min-h-80"
+          <StudyOverviewWidget
+            studySessions={studySessions}
+            onOpenPomodoro={onOpenPomodoro}
           />
         </div>
       </div>

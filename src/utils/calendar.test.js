@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   filterEventsFromDate,
+  getDashboardCalendarEvents,
   normalizeCalendarEvent,
   sortEventsByDate,
 } from "./calendar.js";
@@ -53,4 +54,45 @@ test("mantiene Informatica lab come titolo e riconosce la materia", () => {
   assert.equal(event.title, "Informatica lab");
   assert.equal(event.type, "ORARIO");
   assert.equal(event.subjectId, "subj-info");
+});
+
+test("seleziona per la Home le prime tre scadenze ed esclude l'orario", () => {
+  const events = [
+    {
+      id: "orario",
+      rawTitle: "[ORARIO] Informatica lab",
+      startDate: "2026-09-20T08:00:00Z",
+    },
+    {
+      id: "quarta",
+      rawTitle: "[ALTRO] Quarta scadenza",
+      startDate: "2026-09-24T08:00:00Z",
+    },
+    {
+      id: "seconda",
+      rawTitle: "[CONSEGNA] Seconda scadenza",
+      startDate: "2026-09-22T08:00:00Z",
+    },
+    {
+      id: "prima",
+      rawTitle: "[VERIFICA] Prima scadenza",
+      startDate: "2026-09-21T08:00:00Z",
+    },
+    {
+      id: "terza",
+      rawTitle: "[INTERROGAZIONE] Terza scadenza",
+      startDate: "2026-09-23T08:00:00Z",
+    },
+  ];
+
+  const dashboardEvents = getDashboardCalendarEvents(
+    events,
+    3,
+    new Date("2026-09-19T12:00:00Z"),
+  );
+
+  assert.deepEqual(
+    dashboardEvents.map((event) => event.id),
+    ["prima", "seconda", "terza"],
+  );
 });

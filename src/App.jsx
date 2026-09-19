@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import pomodoroCompleteSound from "./assets/pomodoro-complete.wav";
 
 import DashboardHome from './components/dashboard/DashboardHome';
 import DashboardLayout from './components/layout/DashboardLayout';
@@ -40,6 +42,112 @@ export default function App() {
       remainingSecondsOnPause: null,
     },
   );
+
+  const [studySessions, setStudySessions] = useLocalStorage(
+    "dashboard_study_sessions",
+    [],
+  );
+
+  const processedPomodoroTargetRef = useRef(null);
+
+  useEffect(() => {
+    const targetEndTimestamp = pomodoroState.targetEndTimestamp;
+
+    if (!pomodoroState.isRunning || !targetEndTimestamp) {
+      return undefined;
+    }
+
+    const completeTimer = () => {
+      if (processedPomodoroTargetRef.current === targetEndTimestamp) {
+        return;
+      }
+
+      processedPomodoroTargetRef.current = targetEndTimestamp;
+
+      const completedMode =
+        pomodoroState.mode ?? POMODORO_MODES.WORK;
+
+      if (
+        completedMode === POMODORO_MODES.WORK &&
+        pomodoroState.selectedSubjectId
+      ) {
+        const sessionId = `ses-${targetEndTimestamp}`;
+
+        setStudySessions((currentSessions) => {
+          if (currentSessions.some((session) => session.id === sessionId)) {
+            return currentSessions;
+          }
+
+          return [
+            ...currentSessions,
+            {
+              id: sessionId,
+              subjectId: pomodoroState.selectedSubjectId,
+              durationMinutes: pomodoroConfig.workDurationMinutes,
+              completedAt: new Date(targetEndTimestamp).toISOString(),
+              type: "POMODORO",
+            },
+          ];
+        });
+      }
+
+      const audio = new Audio(pomodoroCompleteSound);
+
+      audio.play().catch((error) => {
+        console.warn("Impossibile riprodurre il suono:", error);
+      });
+
+      setPomodoroState((currentState) => {
+        if (
+          !currentState.isRunning ||
+          currentState.targetEndTimestamp !== targetEndTimestamp
+        ) {
+          return currentState;
+        }
+
+        if (completedMode === POMODORO_MODES.WORK) {
+          const nextCycle = (currentState.completedCycles ?? 0) + 1;
+          const nextMode =
+            nextCycle % POMODORO_DEFAULTS.longBreakInterval === 0
+              ? POMODORO_MODES.LONG_BREAK
+              : POMODORO_MODES.SHORT_BREAK;
+
+          return {
+            ...currentState,
+            mode: nextMode,
+            isRunning: false,
+            completedCycles: nextCycle,
+            targetEndTimestamp: null,
+            remainingSecondsOnPause: null,
+          };
+        }
+
+        return {
+          ...currentState,
+          mode: POMODORO_MODES.WORK,
+          selectedSubjectId: "",
+          isRunning: false,
+          targetEndTimestamp: null,
+          remainingSecondsOnPause: null,
+        };
+      });
+    };
+
+    const timeoutId = setTimeout(
+      completeTimer,
+      Math.max(0, targetEndTimestamp - Date.now()),
+    );
+
+    return () => clearTimeout(timeoutId);
+  }, [
+    pomodoroConfig.workDurationMinutes,
+    pomodoroState.isRunning,
+    pomodoroState.mode,
+    pomodoroState.selectedSubjectId,
+    pomodoroState.targetEndTimestamp,
+    setPomodoroState,
+    setStudySessions,
+  ]);
 
   const {
     events: calendarEvents,
@@ -91,6 +199,10 @@ export default function App() {
   function handleOpenPomodoro() {
     setActiveSection("pomodoro");
   }
+
+  function handleOpenCalendar() {
+    setActiveSection("calendar");
+  }
   
 
   return (
@@ -107,6 +219,11 @@ export default function App() {
           pomodoroState={pomodoroState}
           setPomodoroState={setPomodoroState}
           onOpenPomodoro={handleOpenPomodoro}
+          studySessions={studySessions}
+          calendarEvents={calendarEvents}
+          calendarLoading={calendarLoading}
+          calendarError={calendarError}
+          onOpenCalendar={handleOpenCalendar}
           f1Data={f1Data}
           f1Loading={f1Loading}
           f1Error={f1Error}
@@ -126,6 +243,7 @@ export default function App() {
           setPomodoroConfig={setPomodoroConfig}
           pomodoroState={pomodoroState}
           setPomodoroState={setPomodoroState}
+          studySessions={studySessions}
         />
       )}
       {activeSection === 'calendar' && (

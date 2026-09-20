@@ -12,6 +12,10 @@ import QuickNotesHub from "./components/quick-notes/QuickNotesHub";
 import useICal from "./hooks/useICal";
 import useF1Data from './hooks/useF1Data';
 import useLocalStorage from './hooks/useLocalStorage';
+import {
+  getPathnameForSection,
+  getSectionFromPathname,
+} from "./utils/navigation";
 
 import {
   POMODORO_DEFAULTS,
@@ -20,7 +24,9 @@ import {
 
 export default function App() {
 
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState(() =>
+    getSectionFromPathname(window.location.pathname)
+  );
   const [tasks, setTasks] = useLocalStorage("dashboard_tasks", []);
   const [pomodoroConfig, setPomodoroConfig] = useLocalStorage(
     "dashboard_pomodoro_config",
@@ -49,6 +55,29 @@ export default function App() {
   );
 
   const processedPomodoroTargetRef = useRef(null);
+
+  useEffect(() => {
+    const currentSection = getSectionFromPathname(
+      window.location.pathname,
+    );
+    const normalizedPathname = getPathnameForSection(currentSection);
+
+    if (window.location.pathname !== normalizedPathname) {
+      window.history.replaceState({}, "", normalizedPathname);
+    }
+
+    const handlePopState = () => {
+      setActiveSection(
+        getSectionFromPathname(window.location.pathname),
+      );
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   useEffect(() => {
     const targetEndTimestamp = pomodoroState.targetEndTimestamp;
@@ -217,23 +246,34 @@ export default function App() {
     );
   }
 
+  function handleSectionChange(section) {
+    const pathname = getPathnameForSection(section);
+    const nextSection = getSectionFromPathname(pathname);
+
+    if (window.location.pathname !== pathname) {
+      window.history.pushState({}, "", pathname);
+    }
+
+    setActiveSection(nextSection);
+  }
+
   function handleOpenTasks() {
-    setActiveSection("tasks");
+    handleSectionChange("tasks");
   }
 
   function handleOpenPomodoro() {
-    setActiveSection("pomodoro");
+    handleSectionChange("pomodoro");
   }
 
   function handleOpenCalendar() {
-    setActiveSection("calendar");
+    handleSectionChange("calendar");
   }
   
 
   return (
     <DashboardLayout
       activeSection={activeSection}
-      onSectionChange={setActiveSection}
+      onSectionChange={handleSectionChange}
     >
       {activeSection === 'dashboard' && (
         <DashboardHome

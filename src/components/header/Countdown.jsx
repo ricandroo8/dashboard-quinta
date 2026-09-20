@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 
-function calculateTimeRemaining(targetDate) {
+function calculateTimeRemaining(targetDate, currentTime = Date.now()) {
   const targetTime = new Date(targetDate).getTime();
-  const currentTime = Date.now();
   const difference = targetTime - currentTime;
 
   if (Number.isNaN(targetTime)) {
@@ -35,21 +34,18 @@ function calculateTimeRemaining(targetDate) {
 }
 
 function Countdown({ targetDate }) {
-  const [timeRemaining, setTimeRemaining] = useState(() =>
-    calculateTimeRemaining(targetDate)
-  );
+  const [currentTime, setCurrentTime] = useState(Date.now);
+  const timeRemaining = calculateTimeRemaining(targetDate, currentTime);
 
   useEffect(() => {
-    setTimeRemaining(calculateTimeRemaining(targetDate));
-
     const intervalId = setInterval(() => {
-      setTimeRemaining(calculateTimeRemaining(targetDate));
+      setCurrentTime(Date.now());
     }, 1000);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [targetDate]);
+  }, []);
 
   if (!timeRemaining) {
     return (

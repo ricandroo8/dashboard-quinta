@@ -138,7 +138,32 @@ export default function App() {
       Math.max(0, targetEndTimestamp - Date.now()),
     );
 
-    return () => clearTimeout(timeoutId);
+    const reconcileTimer = () => {
+      if (Date.now() >= targetEndTimestamp) {
+        completeTimer();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        reconcileTimer();
+      }
+    };
+
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+    );
+    window.addEventListener("focus", reconcileTimer);
+
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+      );
+      window.removeEventListener("focus", reconcileTimer);
+    };
   }, [
     pomodoroConfig.workDurationMinutes,
     pomodoroState.isRunning,

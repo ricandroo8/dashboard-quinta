@@ -8,6 +8,7 @@ import {
   POMODORO_LABELS,
   POMODORO_MODES,
 } from "../../constants/pomodoro";
+import { getRemainingSeconds } from "../../utils/pomodoro";
 
 import StudySummary from "./StudySummary";
 
@@ -38,11 +39,9 @@ function PomodoroTimer({
 
   const [secondsLeft, setSecondsLeft] = useState(() => {
     if (pomodoroState.isRunning && pomodoroState.targetEndTimestamp) {
-      const remainingSeconds = Math.ceil(
-        (pomodoroState.targetEndTimestamp - Date.now()) / 1000,
+      return getRemainingSeconds(
+        pomodoroState.targetEndTimestamp,
       );
-
-      return Math.max(0, remainingSeconds);
     }
 
     if (pomodoroState.remainingSecondsOnPause !== null) {
@@ -121,18 +120,43 @@ function PomodoroTimer({
   };
 
   useEffect(() => {
-    if (!isRunning) {
-      return;
+    const targetEndTimestamp = pomodoroState.targetEndTimestamp;
+
+    if (!isRunning || !targetEndTimestamp) {
+      return undefined;
     }
 
-    const intervalId = setInterval(() => {
-      setSecondsLeft((currentSeconds) =>
-        Math.max(0, currentSeconds - 1),
+    const syncRemainingTime = () => {
+      setSecondsLeft(
+        getRemainingSeconds(targetEndTimestamp),
       );
-    }, 1000);
+    };
 
-    return () => clearInterval(intervalId);
-  }, [isRunning]);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        syncRemainingTime();
+      }
+    };
+
+    const initialSyncId = setTimeout(syncRemainingTime, 0);
+    const intervalId = setInterval(syncRemainingTime, 1000);
+
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+    );
+    window.addEventListener("focus", syncRemainingTime);
+
+    return () => {
+      clearTimeout(initialSyncId);
+      clearInterval(intervalId);
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+      );
+      window.removeEventListener("focus", syncRemainingTime);
+    };
+  }, [isRunning, pomodoroState.targetEndTimestamp]);
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">

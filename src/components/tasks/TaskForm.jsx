@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Plus, Save, X } from 'lucide-react';
 
 import {
@@ -15,6 +15,22 @@ const initialFormData = {
     isUrgent: false,
     isImportant: false,
 };
+
+function getInitialFormData(editingTask) {
+    if (!editingTask) {
+        return initialFormData;
+    }
+
+    return {
+        title: editingTask.title ?? '',
+        description: editingTask.description ?? '',
+        subjectId: editingTask.subjectId ?? '',
+        dueDate: toDateTimeLocalValue(editingTask.dueDate),
+        type: editingTask.type ?? 'HOMEWORK',
+        isUrgent: editingTask.isUrgent ?? false,
+        isImportant: editingTask.isImportant ?? false,
+    };
+}
 
 function toDateTimeLocalValue(dateString) {
     if (!dateString) {
@@ -38,24 +54,9 @@ function TaskForm({
     onUpdateTask,
     onCancelEdit,
 }) {
-    const [formData, setFormData] = useState(initialFormData);
-
-    useEffect(() => {
-        if (!editingTask) {
-            setFormData(initialFormData);
-            return;
-        }
-
-        setFormData({
-            title: editingTask.title ?? '',
-            description: editingTask.description ?? '',
-            subjectId: editingTask.subjectId ?? '',
-            dueDate: toDateTimeLocalValue(editingTask.dueDate),
-            type: editingTask.type ?? 'HOMEWORK',
-            isUrgent: editingTask.isUrgent ?? false,
-            isImportant: editingTask.isImportant ?? false,
-        });
-    }, [editingTask]);
+    const [formData, setFormData] = useState(() =>
+        getInitialFormData(editingTask)
+    );
 
     function handleChange(event) {
         const { name, value, type, checked } = event.target;

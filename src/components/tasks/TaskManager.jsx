@@ -71,6 +71,7 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
             </header>
 
             <TaskForm
+                key={editingTask?.id ?? 'new-task'}
                 editingTask={editingTask}
                 onAddTask={handleAddTask}
                 onUpdateTask={handleUpdateTask}

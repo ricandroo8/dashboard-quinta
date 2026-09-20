@@ -11,6 +11,7 @@ import {
   POMODORO_MODES,
 } from "../../constants/pomodoro";
 import { SUBJECT_LABELS } from "../../constants/subjects";
+import { getRemainingSeconds } from "../../utils/pomodoro";
 
 function getDefaultDurationSeconds(mode, config) {
   if (mode === POMODORO_MODES.SHORT_BREAK) {
@@ -43,17 +44,33 @@ function PomodoroOverviewWidget({
       return undefined;
     }
 
-    const timeoutId = setTimeout(() => {
+    const syncCurrentTime = () => {
       setNow(Date.now());
-    }, 0);
+    };
 
-    const intervalId = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        syncCurrentTime();
+      }
+    };
+
+    const timeoutId = setTimeout(syncCurrentTime, 0);
+    const intervalId = setInterval(syncCurrentTime, 1000);
+
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+    );
+    window.addEventListener("focus", syncCurrentTime);
 
     return () => {
       clearTimeout(timeoutId);
       clearInterval(intervalId);
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+      );
+      window.removeEventListener("focus", syncCurrentTime);
     };
   }, [
     pomodoroState.isRunning,
@@ -70,11 +87,9 @@ function PomodoroOverviewWidget({
     pomodoroState.targetEndTimestamp &&
     now !== null
   ) {
-    secondsLeft = Math.max(
-      0,
-      Math.ceil(
-        (pomodoroState.targetEndTimestamp - now) / 1000,
-      ),
+    secondsLeft = getRemainingSeconds(
+      pomodoroState.targetEndTimestamp,
+      now,
     );
   } else if (
     typeof pomodoroState.remainingSecondsOnPause === "number"

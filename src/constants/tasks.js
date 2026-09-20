@@ -1,12 +1,8 @@
+import { SUBJECTS } from './subjects';
+
 export const TASK_SUBJECTS = [
     { id: '', label: 'Nessuna materia' },
-    { id: 'subj-gpoi', label: 'GPOI' },
-    { id: 'subj-mate', label: 'Matematica' },
-    { id: 'subj-info', label: 'Informatica' },
-    { id: 'subj-sistemi', label: 'Sistemi e Reti' },
-    { id: 'subj-tps', label: 'TPS' },
-    { id: 'subj-italiano', label: 'Italiano' },
-    { id: 'subj-storia', label: 'Storia' }
+    ...SUBJECTS,
 ];
 
 export const TASK_TYPES = [

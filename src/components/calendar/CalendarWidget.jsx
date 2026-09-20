@@ -153,7 +153,7 @@ function CalendarWidget({
                     <p className="mt-1 text-sm text-white/50">
                       {event.subjectId
                         ? SUBJECT_LABELS[event.subjectId]
-                        : "Evento generale"}
+                        : event.type}
                     </p>
                   </div>
 

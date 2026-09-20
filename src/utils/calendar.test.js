@@ -56,6 +56,25 @@ test("mantiene Informatica lab come titolo e riconosce la materia", () => {
   assert.equal(event.subjectId, "subj-info");
 });
 
+test("riconosce Computer Science e Inglese come materie distinte", () => {
+  const computerScienceEvent = normalizeCalendarEvent({
+    id: "computer-science",
+    rawTitle: "[VERIFICA] Computer Science - Algoritmi",
+    startDate: "2026-09-21T08:00:00Z",
+  });
+  const englishEvent = normalizeCalendarEvent({
+    id: "inglese",
+    rawTitle: "[INTERROGAZIONE] Inglese - The Victorian Age",
+    startDate: "2026-09-22T08:00:00Z",
+  });
+
+  assert.equal(
+    computerScienceEvent.subjectId,
+    "subj-computer-science",
+  );
+  assert.equal(englishEvent.subjectId, "subj-inglese");
+});
+
 test("seleziona per la Home le prime tre scadenze ed esclude l'orario", () => {
   const events = [
     {

@@ -8,7 +8,7 @@ function ThemeToggle({
   onToggleTheme,
 }) {
   const isDarkTheme = theme === "dark";
-  const Icon = isDarkTheme ? Sun : Moon;
+  const Icon = isDarkTheme ? Moon : Sun;
   const nextThemeLabel = isDarkTheme
     ? "Attiva tema chiaro"
     : "Attiva tema scuro";
@@ -17,18 +17,38 @@ function ThemeToggle({
     <button
       type="button"
       onClick={onToggleTheme}
-      aria-pressed={isDarkTheme}
-      aria-label={nextThemeLabel}
+      role="switch"
+      aria-checked={isDarkTheme}
       title={nextThemeLabel}
-      className="flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+      className="group flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-1 py-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
     >
-      <Icon
-        className="h-5 w-5 shrink-0"
-        aria-hidden="true"
-      />
+      <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+        Tema {isDarkTheme ? "scuro" : "chiaro"}
+      </span>
 
-      <span>
-        {isDarkTheme ? "Tema chiaro" : "Tema scuro"}
+      <span
+        aria-hidden="true"
+        className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full border p-1 shadow-inner transition-colors duration-300 ${
+          isDarkTheme
+            ? "border-slate-600 bg-slate-800"
+            : "border-sky-200 bg-sky-100"
+        }`}
+      >
+        <span
+          className={`flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-black/5 transition-transform duration-300 ${
+            isDarkTheme ? "translate-x-6" : "translate-x-0"
+          }`}
+        >
+          <Icon
+            size={14}
+            strokeWidth={2.25}
+            className={
+              isDarkTheme
+                ? "text-indigo-600"
+                : "text-amber-500"
+            }
+          />
+        </span>
       </span>
     </button>
   );

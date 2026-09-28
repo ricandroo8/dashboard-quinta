@@ -43,10 +43,10 @@ function getPriorityLabel(task) {
 
 function getPriorityClasses(task) {
   if (task.isUrgent) {
-    return "border-rose-400/20 bg-rose-400/10 text-rose-200";
+    return "border-rose-400/20 bg-rose-400/10 text-rose-700 dark:text-rose-200";
   }
 
-  return "border-amber-400/20 bg-amber-400/10 text-amber-200";
+  return "border-amber-400/20 bg-amber-400/10 text-amber-700 dark:text-amber-200";
 }
 
 function TaskOverviewWidget({
@@ -59,7 +59,7 @@ function TaskOverviewWidget({
   const dashboardTasks = getDashboardTasks(safeTasks);
 
   return (
-    <section className="group relative min-w-0 cursor-pointer overflow-hidden rounded-3xl border border-sky-300/15 bg-slate-900/60 p-5 shadow-xl shadow-black/10 backdrop-blur-md transition hover:border-sky-300/30 hover:bg-slate-900/75">
+    <section className="group relative min-w-0 cursor-pointer overflow-hidden rounded-3xl border border-sky-300/15 bg-white/80 dark:bg-slate-900/60 p-5 shadow-xl shadow-black/10 backdrop-blur-md transition hover:border-sky-300/30 hover:bg-slate-100 dark:hover:bg-slate-900/75">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-400/[0.06] to-transparent"
@@ -75,7 +75,7 @@ function TaskOverviewWidget({
       <div className="pointer-events-none relative z-20">
         <header className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-sky-400/20 bg-sky-400/10 text-sky-300">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-sky-400/20 bg-sky-400/10 text-sky-700 dark:text-sky-300">
               <CheckSquare size={18} aria-hidden="true" />
             </span>
 
@@ -84,12 +84,12 @@ function TaskOverviewWidget({
                 <button
                   type="button"
                   onClick={onOpenTasks}
-                  className="pointer-events-auto relative z-30 rounded text-base font-semibold text-slate-100 transition hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                  className="pointer-events-auto relative z-30 rounded text-base font-semibold text-slate-900 dark:text-slate-100 transition hover:text-sky-700 dark:hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
                 >
                   Attività
                 </button>
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-600 dark:text-slate-400">
                 Priorità della giornata
               </p>
             </div>
@@ -101,13 +101,13 @@ function TaskOverviewWidget({
         </header>
 
         {activeTasks.length === 0 ? (
-          <div className="mt-5 rounded-2xl border border-white/10 bg-black/10 p-4 text-center">
+          <div className="mt-5 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/10 p-4 text-center">
             <ClipboardList
               size={24}
               aria-hidden="true"
               className="mx-auto text-slate-500"
             />
-            <p className="mt-2 text-sm text-slate-300">
+            <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">
               Nessuna attività da completare.
             </p>
           </div>
@@ -122,13 +122,13 @@ function TaskOverviewWidget({
               return (
                 <li
                   key={task.id}
-                  className="flex min-w-0 items-start gap-3 rounded-2xl border border-white/10 bg-black/10 p-3"
+                  className="flex min-w-0 items-start gap-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/10 p-3"
                 >
                   <button
                     type="button"
                     onClick={() => onToggleTask(task.id)}
                     aria-label={`Segna "${task.title}" come completato`}
-                    className="pointer-events-auto relative z-30 mt-0.5 shrink-0 rounded-full text-slate-500 transition hover:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                    className="pointer-events-auto relative z-30 mt-0.5 shrink-0 rounded-full text-slate-500 transition hover:text-emerald-700 dark:hover:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
                   >
                     <Circle size={18} aria-hidden="true" />
                   </button>
@@ -137,13 +137,13 @@ function TaskOverviewWidget({
                     <button
                       type="button"
                       onClick={onOpenTasks}
-                      className="pointer-events-auto relative z-30 block max-w-full truncate rounded text-left text-sm font-medium text-slate-100 transition hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                      className="pointer-events-auto relative z-30 block max-w-full truncate rounded text-left text-sm font-medium text-slate-900 dark:text-slate-100 transition hover:text-sky-700 dark:hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
                     >
                       {task.title}
                     </button>
 
                     <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs">
-                      <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-slate-300">
+                      <span className="rounded-full border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 px-2 py-0.5 text-slate-700 dark:text-slate-300">
                         {subjectLabel}
                       </span>
 
@@ -156,7 +156,7 @@ function TaskOverviewWidget({
                       )}
 
                       {dueDate && (
-                        <span className="flex items-center gap-1 text-slate-400">
+                        <span className="flex items-center gap-1 text-slate-600 dark:text-slate-400">
                           <CalendarDays size={12} aria-hidden="true" />
                           {dueDate}
                         </span>

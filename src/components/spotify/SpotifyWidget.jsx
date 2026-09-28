@@ -48,7 +48,7 @@ function TrackArtwork({ imageUrl }) {
 
     return (
         <div
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400/20 to-cyan-400/10 text-green-200 ring-1 ring-inset ring-white/10"
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400/20 to-cyan-400/10 text-green-700 ring-1 ring-inset ring-slate-200 dark:text-green-200 dark:ring-white/10"
             aria-hidden="true"
         >
             <Music2 size={26} />
@@ -244,8 +244,8 @@ function SpotifyWidget() {
             : 0;
 
     const secondaryControlClasses = [
-        "rounded-full p-2 text-slate-300 transition",
-        "hover:bg-white/10 hover:text-white",
+        "rounded-full p-2 text-slate-700 dark:text-slate-300 transition",
+        "hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white",
         "focus-visible:outline-none",
         "focus-visible:ring-2",
         "focus-visible:ring-green-300",
@@ -253,10 +253,10 @@ function SpotifyWidget() {
     ].join(" ");
 
     return (
-        <section className="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/60 p-5 shadow-xl shadow-slate-950/10 backdrop-blur-xl">
+        <section className="overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-slate-900/60 p-5 shadow-xl shadow-slate-950/10 backdrop-blur-xl">
             <div className="flex items-center justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-green-400/10 text-green-300 ring-1 ring-inset ring-green-300/10">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-green-400/10 text-green-700 ring-1 ring-inset ring-green-300/10 dark:text-green-300">
                         <Music2
                             size={19}
                             aria-hidden="true"
@@ -264,7 +264,7 @@ function SpotifyWidget() {
                     </span>
 
                     <div className="min-w-0">
-                        <h2 className="text-base font-semibold text-slate-100">
+                        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">
                             Spotify
                         </h2>
                         <p className="truncate text-xs text-slate-500">
@@ -276,14 +276,14 @@ function SpotifyWidget() {
                 </div>
 
                 {isConnected && (
-                    <span className="shrink-0 rounded-full border border-green-300/15 bg-green-300/10 px-2.5 py-1 text-[11px] font-medium text-green-200">
+                    <span className="shrink-0 rounded-full border border-green-300/15 bg-green-300/10 px-2.5 py-1 text-[11px] font-medium text-green-700 dark:text-green-200">
                         Connesso
                     </span>
                 )}
             </div>
 
             {!isConnected && (
-                <p className="mt-3 text-sm leading-6 text-slate-400">
+                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
                     Collega il tuo account per controllare la riproduzione.
                 </p>
             )}
@@ -298,14 +298,14 @@ function SpotifyWidget() {
 
                         <div className="min-w-0">
                             <p
-                                className="truncate font-semibold text-slate-100"
+                                className="truncate font-semibold text-slate-900 dark:text-slate-100"
                                 title={currentTrack.title}
                             >
                                 {currentTrack.title}
                             </p>
 
                             <p
-                                className="mt-0.5 truncate text-sm text-slate-400"
+                                className="mt-0.5 truncate text-sm text-slate-600 dark:text-slate-400"
                                 title={currentTrack.artist}
                             >
                                 {currentTrack.artist}
@@ -401,7 +401,7 @@ function SpotifyWidget() {
 
                     <div className="mt-3">
                         <div
-                            className="h-1.5 overflow-hidden rounded-full bg-white/10"
+                            className="h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-white/10"
                             role="progressbar"
                             aria-label="Avanzamento riproduzione"
                             aria-valuemin="0"
@@ -443,7 +443,7 @@ function SpotifyWidget() {
                 isLoadingPlayback && (
                     <p
                         role="status"
-                        className="mt-4 text-sm text-slate-400"
+                        className="mt-4 text-sm text-slate-600 dark:text-slate-400"
                     >
                         Aggiornamento della riproduzione...
                     </p>
@@ -454,7 +454,7 @@ function SpotifyWidget() {
                 !isConnecting &&
                 !isLoadingPlayback &&
                 !pollingError && (
-                    <p className="mt-4 text-sm text-slate-400">
+                    <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
                         Nessuna traccia in riproduzione.
                     </p>
                 )}
@@ -462,7 +462,7 @@ function SpotifyWidget() {
             {pollingError && (
                 <p
                     role="status"
-                    className="mt-3 rounded-xl border border-amber-300/20 bg-amber-300/10 px-3 py-2 text-xs leading-5 text-amber-200"
+                    className="mt-3 rounded-xl border border-amber-300/20 bg-amber-300/10 px-3 py-2 text-xs leading-5 text-amber-700 dark:text-amber-200"
                 >
                     Aggiornamento temporaneamente non disponibile. {pollingError}
                 </p>
@@ -471,7 +471,7 @@ function SpotifyWidget() {
             {error && (
                 <p
                     role="alert"
-                    className="mt-3 rounded-xl border border-rose-300/20 bg-rose-300/10 px-3 py-2 text-sm text-rose-200"
+                    className="mt-3 rounded-xl border border-rose-300/20 bg-rose-300/10 px-3 py-2 text-sm text-rose-700 dark:text-rose-200"
                 >
                     {error}
                 </p>

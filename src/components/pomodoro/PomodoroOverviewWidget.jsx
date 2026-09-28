@@ -124,24 +124,24 @@ function PomodoroOverviewWidget({
 
   let statusLabel = "Pronto";
   let statusClasses =
-    "border-white/10 bg-white/5 text-slate-300";
+    "border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 text-slate-700 dark:text-slate-300";
 
   if (pomodoroState.isRunning) {
     statusLabel = "In corso";
     statusClasses =
-      "border-rose-400/20 bg-rose-400/10 text-rose-200";
+      "border-rose-400/20 bg-rose-400/10 text-rose-700 dark:text-rose-200";
   }
 
   if (isPaused) {
     statusLabel = "In pausa";
     statusClasses =
-      "border-amber-400/20 bg-amber-400/10 text-amber-200";
+      "border-amber-400/20 bg-amber-400/10 text-amber-700 dark:text-amber-200";
   }
 
   if (isExpired) {
     statusLabel = "Terminato";
     statusClasses =
-      "border-emerald-400/20 bg-emerald-400/10 text-emerald-200";
+      "border-emerald-400/20 bg-emerald-400/10 text-emerald-700 dark:text-emerald-200";
   }
 
   const needsSubject =
@@ -209,7 +209,7 @@ function PomodoroOverviewWidget({
   }
 
   return (
-    <section className="group relative min-h-44 w-full min-w-0 cursor-pointer overflow-hidden rounded-3xl border border-rose-300/15 bg-slate-900/60 p-5 text-left shadow-xl shadow-black/10 backdrop-blur-md transition hover:border-rose-300/30 hover:bg-slate-900/75">
+    <section className="group relative min-h-44 w-full min-w-0 cursor-pointer overflow-hidden rounded-3xl border border-rose-300/15 bg-white/80 dark:bg-slate-900/60 p-5 text-left shadow-xl shadow-black/10 backdrop-blur-md transition hover:border-rose-300/30 hover:bg-slate-100 dark:hover:bg-slate-900/75">
       <button
         type="button"
         onClick={onOpenPomodoro}
@@ -225,16 +225,16 @@ function PomodoroOverviewWidget({
       <span className="pointer-events-none relative z-20 flex h-full flex-col">
         <span className="flex items-start justify-between gap-4">
           <span className="flex min-w-0 items-center gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-rose-400/20 bg-rose-400/10 text-rose-300">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-rose-400/20 bg-rose-400/10 text-rose-700 dark:text-rose-300">
               <Timer size={18} aria-hidden="true" />
             </span>
 
             <span className="min-w-0">
-              <span className="block text-base font-semibold text-slate-100 transition group-hover:text-rose-300">
+              <span className="block text-base font-semibold text-slate-900 transition group-hover:text-rose-700 dark:text-slate-100 dark:group-hover:text-rose-300">
                 Pomodoro
               </span>
 
-              <span className="block text-xs text-slate-400">
+              <span className="block text-xs text-slate-600 dark:text-slate-400">
                 Sessione di studio
               </span>
             </span>
@@ -249,17 +249,17 @@ function PomodoroOverviewWidget({
 
         <span className="mt-6 flex items-end justify-between gap-4">
           <span>
-            <span className="block font-mono text-4xl font-semibold tracking-tight text-white">
+            <span className="block font-mono text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
               {formattedTime}
             </span>
 
-            <span className="mt-1 block text-sm font-medium text-rose-200">
+            <span className="mt-1 block text-sm font-medium text-rose-700 dark:text-rose-200">
               {modeLabel}
             </span>
           </span>
 
           <span className="text-right">
-            <span className="block max-w-32 truncate text-sm text-slate-300">
+            <span className="block max-w-32 truncate text-sm text-slate-700 dark:text-slate-300">
               {subjectLabel}
             </span>
 
@@ -288,7 +288,7 @@ function PomodoroOverviewWidget({
             type="button"
             onClick={handleResetTimer}
             aria-label="Reimposta il timer"
-            className="inline-flex items-center justify-center rounded-xl border border-white/10 px-3 py-2 text-slate-300 transition hover:border-white/20 hover:bg-white/5 hover:text-white focus:outline-none focus:ring-2 focus:ring-rose-400/40"
+            className="inline-flex items-center justify-center rounded-xl border border-slate-200 dark:border-white/10 px-3 py-2 text-slate-700 dark:text-slate-300 transition hover:border-slate-400 dark:hover:border-white/20 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-rose-400/40"
           >
             <RotateCcw size={16} aria-hidden="true" />
           </button>

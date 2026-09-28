@@ -18,7 +18,7 @@ function CalendarOverviewWidget({
   const upcomingEvents = getDashboardCalendarEvents(events);
 
   return (
-    <section className="group relative min-h-80 overflow-hidden rounded-3xl border border-violet-300/15 bg-slate-900/60 p-5 shadow-xl shadow-black/10 backdrop-blur-md transition hover:border-violet-300/30 hover:bg-slate-900/75">
+    <section className="group relative min-h-80 overflow-hidden rounded-3xl border border-violet-300/15 bg-white/80 dark:bg-slate-900/60 p-5 shadow-xl shadow-black/10 backdrop-blur-md transition hover:border-violet-300/30 hover:bg-slate-100 dark:hover:bg-slate-900/75">
       <button
         type="button"
         onClick={onOpenCalendar}
@@ -29,12 +29,12 @@ function CalendarOverviewWidget({
       <div className="pointer-events-none relative z-20 flex h-full flex-col">
         <div className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-400/20 bg-violet-400/10 text-violet-300">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-400/20 bg-violet-400/10 text-violet-700 dark:text-violet-300">
               <CalendarDays size={19} aria-hidden="true" />
             </span>
 
             <div className="min-w-0">
-              <h2 className="truncate text-base font-semibold text-slate-100 transition group-hover:text-violet-300">
+              <h2 className="truncate text-base font-semibold text-slate-900 transition group-hover:text-violet-700 dark:text-slate-100 dark:group-hover:text-violet-300">
                 Calendario scadenze
               </h2>
               <p className="mt-1 text-sm text-slate-500">
@@ -46,7 +46,7 @@ function CalendarOverviewWidget({
           <ChevronRight
             size={18}
             aria-hidden="true"
-            className="mt-2 shrink-0 text-slate-600 transition group-hover:translate-x-0.5 group-hover:text-violet-300"
+            className="mt-2 shrink-0 text-slate-600 transition group-hover:translate-x-0.5 group-hover:text-violet-700 dark:group-hover:text-violet-300"
           />
         </div>
 
@@ -57,16 +57,16 @@ function CalendarOverviewWidget({
             </p>
           ) : error ? (
             <div className="rounded-2xl border border-rose-400/20 bg-rose-400/10 p-4">
-              <p className="text-sm font-medium text-rose-200">
+              <p className="text-sm font-medium text-rose-700 dark:text-rose-200">
                 Calendario non disponibile
               </p>
-              <p className="mt-1 line-clamp-2 text-xs text-rose-200/70">
+              <p className="mt-1 line-clamp-2 text-xs text-rose-700/80 dark:text-rose-200/70">
                 {error}
               </p>
             </div>
           ) : upcomingEvents.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-white/10 bg-black/10 p-4">
-              <p className="text-sm font-medium text-slate-300">
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-black/10">
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 Nessuna scadenza in arrivo
               </p>
               <p className="mt-1 text-xs text-slate-500">
@@ -88,12 +88,12 @@ function CalendarOverviewWidget({
                     className={`rounded-2xl border px-4 py-3 ${
                       isUpcoming
                         ? "border-amber-400/20 bg-amber-400/[0.08]"
-                        : "border-white/10 bg-white/[0.035]"
+                        : "border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/[0.035]"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-slate-100">
+                        <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                           {event.title}
                         </p>
                         <p className="mt-1 truncate text-xs text-slate-500">
@@ -107,8 +107,8 @@ function CalendarOverviewWidget({
                         <p
                           className={`text-xs font-medium ${
                             isUpcoming
-                              ? "text-amber-300"
-                              : "text-violet-200"
+                              ? "text-amber-700 dark:text-amber-300"
+                              : "text-violet-700 dark:text-violet-200"
                           }`}
                         >
                           {daysUntil === 0

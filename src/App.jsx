@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import pomodoroCompleteSound from "./assets/pomodoro-complete.wav";
 
@@ -27,6 +27,12 @@ export default function App() {
   const [activeSection, setActiveSection] = useState(() =>
     getSectionFromPathname(window.location.pathname)
   );
+  const [storedTheme, setStoredTheme] = useLocalStorage(
+    "dashboard_theme",
+    "dark",
+  );
+
+  const theme = storedTheme === "light" ? "light" : "dark";
   const [tasks, setTasks] = useLocalStorage("dashboard_tasks", []);
   const [pomodoroConfig, setPomodoroConfig] = useLocalStorage(
     "dashboard_pomodoro_config",
@@ -55,6 +61,17 @@ export default function App() {
   );
 
   const processedPomodoroTargetRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const rootElement = document.documentElement;
+
+    rootElement.classList.toggle(
+      "dark",
+      theme === "dark",
+    );
+
+    rootElement.style.colorScheme = theme;
+  }, [theme]);
 
   useEffect(() => {
     const currentSection = getSectionFromPathname(
@@ -225,7 +242,12 @@ export default function App() {
       }
     : null;
 
-  
+  function handleToggleTheme() {
+    setStoredTheme((currentTheme) =>
+      currentTheme === "light" ? "dark" : "light"
+    );
+  }
+
   function handleToggleTask(taskId) {
     setTasks((currentTasks) =>
       currentTasks.map((task) => {
@@ -268,12 +290,12 @@ export default function App() {
   function handleOpenCalendar() {
     handleSectionChange("calendar");
   }
-  
-
   return (
     <DashboardLayout
       activeSection={activeSection}
       onSectionChange={handleSectionChange}
+      theme={theme}
+      onToggleTheme={handleToggleTheme}
     >
       {activeSection === 'dashboard' && (
         <DashboardHome
@@ -297,10 +319,10 @@ export default function App() {
 
       {activeSection === "tasks" && (
         <TaskManager
-        tasks={tasks}
-        setTasks={setTasks}
-        onToggleTask={handleToggleTask}
-      />
+          tasks={tasks}
+          setTasks={setTasks}
+          onToggleTask={handleToggleTask}
+        />
       )}
       {activeSection === "pomodoro" && (
         <PomodoroTimer

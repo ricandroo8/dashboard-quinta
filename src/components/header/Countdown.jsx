@@ -70,11 +70,11 @@ function Countdown({ targetDate }) {
       </p>
 
       <div className="flex items-baseline justify-end gap-2 font-mono tabular-nums">
-        <span className="text-lg font-semibold text-slate-100">
+        <span className="text-lg font-semibold text-slate-900 dark:text-slate-100">
           {timeRemaining.days}g
         </span>
 
-        <span className="text-sm text-slate-400">
+        <span className="text-sm text-slate-600 dark:text-slate-400">
           {String(timeRemaining.hours).padStart(2, '0')}:
           {String(timeRemaining.minutes).padStart(2, '0')}:
           {String(timeRemaining.seconds).padStart(2, '0')}

@@ -9,12 +9,12 @@ import StudyOverviewWidget from "../pomodoro/StudyOverviewWidget";
 function F1StatusCard({ title, message, tone = "neutral" }) {
   const toneClasses =
     tone === "error"
-      ? "border-rose-400/20 bg-rose-400/10 text-rose-200"
-      : "border-white/10 bg-slate-900/60 text-slate-400";
+      ? "border-rose-400/20 bg-rose-400/10 text-rose-700 dark:text-rose-200"
+      : "border-slate-200 dark:border-white/10 bg-white/80 dark:bg-slate-900/60 text-slate-600 dark:text-slate-400";
 
   return (
     <section className={`rounded-3xl border p-5 ${toneClasses}`}>
-      <p className="font-semibold text-slate-100">{title}</p>
+      <p className="font-semibold text-slate-900 dark:text-slate-100">{title}</p>
       <p className="mt-2 text-sm">{message}</p>
     </section>
   );

@@ -43,7 +43,7 @@ function QuickLinks() {
           Link rapidi
         </h3>
 
-        <span className="text-xs text-white/40">
+        <span className="text-xs text-slate-500 dark:text-white/40">
           {QUICK_LINKS.length} collegamenti
         </span>
       </div>
@@ -58,27 +58,27 @@ function QuickLinks() {
               href={quickLink.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-sky-400/40 hover:bg-sky-400/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+              className="group rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-4 transition hover:border-sky-400/40 hover:bg-sky-400/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
             >
               <div className="flex items-start justify-between gap-3">
                 <Icon
                   size={20}
-                  className="text-sky-300"
+                  className="text-sky-700 dark:text-sky-300"
                   aria-hidden="true"
                 />
 
                 <ExternalLink
                   size={15}
-                  className="text-white/30 transition group-hover:text-sky-300"
+                  className="text-slate-400 transition group-hover:text-sky-700 dark:text-white/30 dark:group-hover:text-sky-300"
                   aria-hidden="true"
                 />
               </div>
 
-              <p className="mt-3 text-sm font-semibold text-white">
+              <p className="mt-3 text-sm font-semibold text-slate-900 dark:text-white">
                 {quickLink.label}
               </p>
 
-              <p className="mt-1 text-xs leading-relaxed text-white/50">
+              <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-white/50">
                 {quickLink.description}
               </p>
             </a>

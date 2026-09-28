@@ -13,7 +13,7 @@ function Header({ activeSection }) {
   
 
   return (
-    <header className="shrink-0 border-b border-slate-800 bg-slate-900/80 px-6 py-4">
+    <header className="shrink-0 border-b border-slate-200 bg-white/70 px-6 py-4 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80">
       <div className="flex min-w-0 items-center justify-between gap-4">
         <div className="min-w-0">
 
@@ -23,14 +23,14 @@ function Header({ activeSection }) {
             Sezione corrente
           </p>
 
-          <h2 className="truncate text-xl font-bold text-slate-100">
+          <h2 className="truncate text-xl font-bold text-slate-900 dark:text-slate-100">
             {currentItem?.label ?? 'Dashboard'}
           </h2>
 
           <FormattedDate />
         </div>
 
-        <div className="shrink-0 text-sm text-slate-400">
+        <div className="shrink-0 text-sm text-slate-600 dark:text-slate-400">
           <DigitalClock />
 
           <Countdown targetDate={COUNTDOWN_TARGET_DATE} />

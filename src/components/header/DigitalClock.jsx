@@ -23,7 +23,7 @@ function DigitalClock() {
   return (
     <time
       dateTime={currentTime.toISOString()}
-      className="font-mono text-2xl font-semibold tabular-nums text-slate-100"
+      className="font-mono text-2xl font-semibold tabular-nums text-slate-900 dark:text-slate-100"
     >
       {formattedTime}
     </time>

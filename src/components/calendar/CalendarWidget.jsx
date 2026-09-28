@@ -57,14 +57,14 @@ function CalendarWidget({
   };
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <section className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-5">
       <div className="mb-4 flex items-center gap-2">
         <CalendarDays size={20} />
 
         <div>
           <h2 className="font-semibold">Calendario</h2>
 
-          <p className="text-sm text-white/50">
+          <p className="text-sm text-slate-500 dark:text-white/50">
             Prossime scadenze
           </p>
         </div>
@@ -84,7 +84,7 @@ function CalendarWidget({
               className={`rounded-full border px-3 py-1 text-xs transition ${
                 isActive
                   ? "border-sky-400/40 bg-sky-400/15 text-sky-200"
-                  : "border-white/10 bg-white/5 text-white/40"
+                  : "border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 text-slate-500 dark:text-white/40"
               }`}
             >
               {eventType}
@@ -94,7 +94,7 @@ function CalendarWidget({
       </div>
 
       {loading ? (
-        <p className="text-sm text-white/50">
+        <p className="text-sm text-slate-500 dark:text-white/50">
           Caricamento calendario...
         </p>
       ) : error ? (
@@ -102,15 +102,15 @@ function CalendarWidget({
           role="alert"
           className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-3"
         >
-          <p className="text-sm font-medium text-rose-200">
+          <p className="text-sm font-medium text-rose-700 dark:text-rose-200">
             Calendario non disponibile
           </p>
-          <p className="mt-1 text-xs text-rose-200/70">
+          <p className="mt-1 text-xs text-rose-700/80 dark:text-rose-200/70">
             {error}
           </p>
         </div>
       ) : sortedEvents.length === 0 ? (
-        <p className="text-sm text-white/50">
+        <p className="text-sm text-slate-500 dark:text-white/50">
           Nessun evento corrisponde ai filtri attivi.
         </p>
       ) : (
@@ -128,18 +128,18 @@ function CalendarWidget({
                 className={`rounded-xl border p-3 ${
                   isUpcoming
                     ? "border-amber-400/30 bg-amber-400/10"
-                    : "border-white/10 bg-white/5"
+                    : "border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5"
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="mb-1 flex flex-wrap items-center gap-2">
-                      <span className="text-xs text-white/50">
+                      <span className="text-xs text-slate-500 dark:text-white/50">
                         {formatEventDate(event.startDate)}
                       </span>
 
                       {!event.isAllDay && (
-                        <span className="flex items-center gap-1 text-xs text-white/50">
+                        <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-white/50">
                           <Clock size={12} />
                           {formatEventTime(event.startDate)}
                         </span>
@@ -150,7 +150,7 @@ function CalendarWidget({
                       {event.title}
                     </p>
 
-                    <p className="mt-1 text-sm text-white/50">
+                    <p className="mt-1 text-sm text-slate-500 dark:text-white/50">
                       {event.subjectId
                         ? SUBJECT_LABELS[event.subjectId]
                         : event.type}
@@ -158,7 +158,7 @@ function CalendarWidget({
                   </div>
 
                   <div className="flex shrink-0 flex-col items-end gap-1">
-                    <span className="text-xs text-white/50">
+                    <span className="text-xs text-slate-500 dark:text-white/50">
                       {event.type}
                     </span>
 
@@ -166,8 +166,8 @@ function CalendarWidget({
                       <span
                         className={`text-xs ${
                           isUpcoming
-                            ? "font-medium text-amber-300"
-                            : "text-white/40"
+                            ? "font-medium text-amber-700 dark:text-amber-300"
+                            : "text-slate-500 dark:text-white/40"
                         }`}
                       >
                         {daysUntil === 0

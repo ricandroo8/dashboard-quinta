@@ -160,23 +160,23 @@ function PomodoroTimer({
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+      <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-6">
         <div className="mb-6">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
             Timer Pomodoro
           </p>
 
-          <h2 className="text-xl font-semibold text-white">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
             {POMODORO_LABELS[mode]}
           </h2>
         </div>
 
         <div className="mb-8 text-center">
-          <p className="font-mono text-6xl font-semibold tracking-tight text-white">
+          <p className="font-mono text-6xl font-semibold tracking-tight text-slate-900 dark:text-white">
             {formattedTime}
           </p>
 
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             Cicli completati: {completedCycles}
           </p>
         </div>
@@ -195,7 +195,7 @@ function PomodoroTimer({
               isRunning ||
               mode !== POMODORO_MODES.WORK
             }
-            className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white outline-none transition focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-white outline-none transition focus:border-slate-400 dark:focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <option value="">
               Seleziona materia
@@ -262,15 +262,15 @@ function PomodoroTimer({
             <button
               type="button"
               onClick={handleResetTimer}
-              className="rounded-xl border border-white/10 px-4 py-3 font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/5 hover:text-white"
+              className="rounded-xl border border-slate-200 dark:border-white/10 px-4 py-3 font-medium text-slate-700 dark:text-slate-300 transition hover:border-slate-400 dark:hover:border-white/20 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white"
             >
               Reset
             </button>
           </div>
 
-          <div className="border-t border-white/10 pt-5">
+          <div className="border-t border-slate-200 dark:border-white/10 pt-5">
             <div className="mb-4">
-              <p className="text-sm font-medium text-white">
+              <p className="text-sm font-medium text-slate-900 dark:text-white">
                 Durate
               </p>
 
@@ -281,7 +281,7 @@ function PomodoroTimer({
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <label className="space-y-1.5">
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-slate-600 dark:text-slate-400">
                   Studio
                 </span>
 
@@ -307,12 +307,12 @@ function PomodoroTimer({
                       workDurationMinutes: value,
                     }));
                   }}
-                  className="w-full rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white outline-none transition focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-white outline-none transition focus:border-slate-400 dark:focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </label>
 
               <label className="space-y-1.5">
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-slate-600 dark:text-slate-400">
                   Pausa breve
                 </span>
 
@@ -338,12 +338,12 @@ function PomodoroTimer({
                       shortBreakMinutes: value,
                     }));
                   }}
-                  className="w-full rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white outline-none transition focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-white outline-none transition focus:border-slate-400 dark:focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </label>
 
               <label className="space-y-1.5">
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-slate-600 dark:text-slate-400">
                   Pausa lunga
                 </span>
 
@@ -369,17 +369,17 @@ function PomodoroTimer({
                       longBreakMinutes: value,
                     }));
                   }}
-                  className="w-full rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white outline-none transition focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-white outline-none transition focus:border-slate-400 dark:focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </label>
             </div>
 
-            <div className="mt-5 flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-5 flex flex-col gap-3 border-t border-slate-200 dark:border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
               <button
                 type="button"
                 disabled={isRunning}
                 onClick={handleRestoreDurations}
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/5 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 dark:border-white/10 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition hover:border-slate-400 dark:hover:border-white/20 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <RotateCcw size={15} />
                 Ripristina durate
@@ -389,7 +389,7 @@ function PomodoroTimer({
                 type="button"
                 disabled={isRunning}
                 onClick={handleResetPomodoroData}
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-400/20 bg-red-400/5 px-3 py-2 text-sm font-medium text-red-300 transition hover:border-red-400/30 hover:bg-red-400/10 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-400/20 bg-red-400/5 px-3 py-2 text-sm font-medium text-red-700 dark:text-red-300 transition hover:border-red-400/30 hover:bg-red-400/10 hover:text-red-700 dark:hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Trash2 size={15} />
                 Azzera dati

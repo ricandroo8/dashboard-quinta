@@ -292,7 +292,7 @@ function QuickNotesHub() {
   }
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <section className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-5">
       <div className="mb-5 flex items-center gap-2">
         <StickyNote size={20} />
 
@@ -301,7 +301,7 @@ function QuickNotesHub() {
             Quick Notes Hub
           </h2>
 
-          <p className="text-sm text-white/50">
+          <p className="text-sm text-slate-500 dark:text-white/50">
             Appunti veloci sempre a portata di mano
           </p>
         </div>
@@ -311,7 +311,7 @@ function QuickNotesHub() {
 
       <label
         htmlFor="quick-note-content"
-        className="mb-2 block text-sm font-medium text-white/80"
+        className="mb-2 block text-sm font-medium text-slate-700 dark:text-white/80"
       >
         Nuova nota
       </label>
@@ -321,7 +321,7 @@ function QuickNotesHub() {
         value={quickHub.draft.content}
         onChange={handleContentChange}
         placeholder="Scrivi qui un appunto, un promemoria o un'idea..."
-        className="min-h-72 w-full resize-y rounded-xl border border-white/10 bg-slate-950/40 p-4 text-sm leading-relaxed text-white outline-none transition placeholder:text-white/30 focus:border-sky-400/50 focus:ring-2 focus:ring-sky-400/10"
+        className="min-h-72 w-full resize-y rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 p-4 text-sm leading-relaxed text-slate-900 dark:text-white outline-none transition placeholder:text-slate-400 dark:placeholder:text-white/30 focus:border-sky-400/50 focus:ring-2 focus:ring-sky-400/10"
       />
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
@@ -330,16 +330,16 @@ function QuickNotesHub() {
             size={14}
             className={
               isDirty
-                ? "text-amber-300"
-                : "text-emerald-300"
+                ? "text-amber-700 dark:text-amber-300"
+                : "text-emerald-700 dark:text-emerald-300"
             }
           />
 
           <span
             className={
               isDirty
-                ? "text-amber-300"
-                : "text-white/50"
+                ? "text-amber-700 dark:text-amber-300"
+                : "text-slate-500 dark:text-white/50"
             }
           >
             {saveStatus}
@@ -350,26 +350,26 @@ function QuickNotesHub() {
           type="button"
           onClick={handleSaveNote}
           disabled={quickHub.draft.content.trim() === ""}
-          className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-sm font-medium text-slate-900 dark:text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Save size={16} />
           Salva nota
         </button>
       </div>
 
-      <div className="mt-8 border-t border-white/10 pt-5">
+      <div className="mt-8 border-t border-slate-200 dark:border-white/10 pt-5">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h3 className="font-semibold">
             Note salvate
           </h3>
 
-          <span className="text-xs text-white/40">
+          <span className="text-xs text-slate-500 dark:text-white/40">
             {quickHub.notes.length}
           </span>
         </div>
 
         {quickHub.notes.length === 0 ? (
-          <p className="text-sm text-white/40">
+          <p className="text-sm text-slate-500 dark:text-white/40">
             Non hai ancora salvato nessuna nota.
           </p>
         ) : (
@@ -377,7 +377,7 @@ function QuickNotesHub() {
             {quickHub.notes.map((savedNote) => (
               <article
                 key={savedNote.id}
-                className="rounded-xl border border-white/10 bg-white/5 p-4"
+                className="rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-4"
               >
                 {editingNoteId === savedNote.id ? (
                   <div>
@@ -386,14 +386,14 @@ function QuickNotesHub() {
                       onChange={(event) =>
                         setEditingContent(event.target.value)
                       }
-                      className="min-h-28 w-full resize-y rounded-xl border border-sky-400/30 bg-slate-950/40 p-3 text-sm leading-relaxed text-white outline-none focus:border-sky-400/60"
+                      className="min-h-28 w-full resize-y rounded-xl border border-sky-400/30 bg-white dark:bg-slate-950/40 p-3 text-sm leading-relaxed text-slate-900 dark:text-white outline-none focus:border-sky-400/60"
                     />
 
                     <div className="mt-3 flex justify-end gap-2">
                       <button
                         type="button"
                         onClick={handleCancelEditing}
-                        className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white/60 transition hover:bg-white/5 hover:text-white"
+                        className="rounded-lg border border-slate-200 dark:border-white/10 px-3 py-1.5 text-xs text-slate-600 dark:text-white/60 transition hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white"
                       >
                         Annulla
                       </button>
@@ -404,7 +404,7 @@ function QuickNotesHub() {
                           handleSaveChanges(savedNote.id)
                         }
                         disabled={editingContent.trim() === ""}
-                        className="rounded-lg bg-sky-500 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="rounded-lg bg-sky-500 px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         Salva modifiche
                       </button>
@@ -413,7 +413,7 @@ function QuickNotesHub() {
                 ) : (
                   <>
                     <div className="flex items-start justify-between gap-4">
-                      <p className="min-w-0 whitespace-pre-wrap break-words text-sm leading-relaxed text-white/90">
+                      <p className="min-w-0 whitespace-pre-wrap break-words text-sm leading-relaxed text-slate-800 dark:text-white/90">
                         {savedNote.content}
                       </p>
 
@@ -425,7 +425,7 @@ function QuickNotesHub() {
                           }
                           aria-label="Modifica nota"
                           title="Modifica nota"
-                          className="rounded-lg p-2 text-white/40 transition hover:bg-sky-400/10 hover:text-sky-300"
+                          className="rounded-lg p-2 text-slate-500 dark:text-white/40 transition hover:bg-sky-400/10 hover:text-sky-700 dark:hover:text-sky-300"
                         >
                           <Pencil size={16} />
                         </button>
@@ -437,14 +437,14 @@ function QuickNotesHub() {
                           }
                           aria-label="Elimina nota"
                           title="Elimina nota"
-                          className="rounded-lg p-2 text-white/40 transition hover:bg-rose-400/10 hover:text-rose-300"
+                          className="rounded-lg p-2 text-slate-500 dark:text-white/40 transition hover:bg-rose-400/10 hover:text-rose-700 dark:hover:text-rose-300"
                         >
                           <Trash2 size={16} />
                         </button>
                       </div>
                     </div>
 
-                    <p className="mt-3 text-xs text-white/40">
+                    <p className="mt-3 text-xs text-slate-500 dark:text-white/40">
                       {savedNote.updatedAt !== savedNote.createdAt
                         ? `Modificata il ${formatNoteDate(
                             savedNote.updatedAt

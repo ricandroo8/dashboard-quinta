@@ -9,7 +9,7 @@ function FormattedDate() {
   }).format(currentDate);
 
   return (
-    <p className="text-sm capitalize text-slate-400">
+    <p className="text-sm capitalize text-slate-600 dark:text-slate-400">
       {formattedDate}
     </p>
   );

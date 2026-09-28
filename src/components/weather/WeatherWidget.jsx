@@ -25,46 +25,46 @@ function WeatherWidget() {
     <section
       aria-label="Meteo"
       aria-busy={loading}
-      className="relative min-w-0 overflow-hidden rounded-3xl border border-cyan-300/15 bg-slate-900/60 p-5 shadow-xl shadow-black/10 backdrop-blur-md"
+      className="relative min-w-0 overflow-hidden rounded-3xl border border-cyan-300/15 bg-white/80 dark:bg-slate-900/60 p-5 shadow-xl shadow-black/10 backdrop-blur-md"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-br from-cyan-400/[0.06] to-transparent" />
       <div className="relative">
         <header className="flex items-center gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-300">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-700 dark:text-cyan-300">
             <Thermometer size={18} aria-hidden="true" />
           </span>
           <div>
-            <h2 className="text-base font-semibold text-slate-100">Meteo</h2>
-            <p className="text-xs text-slate-400">Condizioni attuali</p>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">Meteo</h2>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Condizioni attuali</p>
           </div>
         </header>
 
         {loading ? (
-          <p role="status" className="mt-5 flex items-start gap-2 text-sm leading-relaxed text-slate-300">
+          <p role="status" className="mt-5 flex items-start gap-2 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
             <LoaderCircle size={16} aria-hidden="true" className="mt-1 shrink-0 motion-safe:animate-spin" />
             Rilevamento posizione e caricamento meteo…
           </p>
         ) : error ? (
-          <p role="alert" className="mt-5 break-words rounded-xl border border-rose-400/20 bg-rose-400/10 p-3 text-sm leading-relaxed text-rose-200">
+          <p role="alert" className="mt-5 break-words rounded-xl border border-rose-400/20 bg-rose-400/10 p-3 text-sm leading-relaxed text-rose-700 dark:text-rose-200">
             {error}
           </p>
         ) : !weather ? (
-          <p className="mt-5 text-sm text-slate-300">Dati meteo non disponibili</p>
+          <p className="mt-5 text-sm text-slate-700 dark:text-slate-300">Dati meteo non disponibili</p>
         ) : (
           <>
             <div className="mt-5 flex items-center gap-4">
               <div className="min-w-0 flex-1">
-                <p className="break-words text-base font-medium text-slate-200">{weather.location}</p>
-                <p className="mt-1 whitespace-nowrap text-4xl font-semibold tracking-tight text-slate-50">
-                  {weather.temperature}<span className="ml-1 text-2xl font-normal text-slate-300">°C</span>
+                <p className="break-words text-base font-medium text-slate-700 dark:text-slate-200">{weather.location}</p>
+                <p className="mt-1 whitespace-nowrap text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+                  {weather.temperature}<span className="ml-1 text-2xl font-normal text-slate-700 dark:text-slate-300">°C</span>
                 </p>
-                <p className="mt-1 break-words text-sm capitalize leading-relaxed text-slate-300">{weather.condition}</p>
+                <p className="mt-1 break-words text-sm capitalize leading-relaxed text-slate-700 dark:text-slate-300">{weather.condition}</p>
               </div>
-              <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/10 bg-cyan-300/5 text-cyan-200">
+              <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/10 bg-cyan-300/5 text-cyan-700 dark:text-cyan-200">
                 <WeatherIcon size={38} strokeWidth={1.5} aria-hidden="true" />
               </span>
             </div>
-            <footer className="mt-4 border-t border-white/10 pt-3 text-xs leading-relaxed text-slate-400">
+            <footer className="mt-4 border-t border-slate-200 dark:border-white/10 pt-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
               <p className="flex items-center gap-1.5">
                 <MapPin size={13} aria-hidden="true" className="shrink-0" />
                 {locationSource === "geolocation" ? "Posizione rilevata" : "Città configurata"}

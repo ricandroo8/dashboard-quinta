@@ -14,7 +14,7 @@ function Greeting({ name = 'Riccardo' }) {
   }
 
   return (
-    <p className="text-sm font-medium text-slate-300">
+    <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
       {greeting}, {name}
     </p>
   );

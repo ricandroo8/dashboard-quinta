@@ -61,11 +61,11 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
     return (
         <section className="space-y-6">
             <header>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-600 dark:text-slate-400">
                     Organizza compiti, verifiche e progetti in un unico posto.
                 </p>
 
-                <h2 className="mt-1 text-2xl font-semibold text-white">
+                <h2 className="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">
                     Task Manager
                 </h2>
             </header>
@@ -80,32 +80,32 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
 
             {/* Card riepilogo */}
             <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm text-slate-400">
+                <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-4">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
                         Totali
                     </p>
 
-                    <p className="mt-2 text-2xl font-semibold text-white">
+                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
                         {totalTasks}
                     </p>
                 </div>
 
                 <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4">
-                    <p className="text-sm text-sky-300">
+                    <p className="text-sm text-sky-700 dark:text-sky-300">
                         Da fare
                     </p>
 
-                    <p className="mt-2 text-2xl font-semibold text-white">
+                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
                         {activeTasks}
                     </p>
                 </div>
 
                 <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4">
-                    <p className="text-sm text-emerald-300">
+                    <p className="text-sm text-emerald-700 dark:text-emerald-300">
                         Completati
                     </p>
 
-                    <p className="mt-2 text-2xl font-semibold text-white">
+                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
                         {completedTasks}
                     </p>
                 </div>
@@ -117,8 +117,8 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
                     onClick={() => setActiveFilter('all')}
                     className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                         activeFilter === 'all'
-                            ? 'bg-sky-500 text-white'
-                            : 'border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                            ? 'bg-sky-500 text-slate-900 dark:text-white'
+                            : 'border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10'
                     }`}
                 >
                     Tutti
@@ -129,8 +129,8 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
                     onClick={() => setActiveFilter('active')}
                     className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                         activeFilter === 'active'
-                            ? 'bg-sky-500 text-white'
-                            : 'border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                            ? 'bg-sky-500 text-slate-900 dark:text-white'
+                            : 'border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10'
                     }`}
                 >
                     Da fare
@@ -141,8 +141,8 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
                     onClick={() => setActiveFilter('completed')}
                     className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                         activeFilter === 'completed'
-                            ? 'bg-sky-500 text-white'
-                            : 'border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                            ? 'bg-sky-500 text-slate-900 dark:text-white'
+                            : 'border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10'
                     }`}
                 >
                     Completati
@@ -150,32 +150,32 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
             </div>
 
             {tasks.length === 0 ? (
-                <div className="flex min-h-64 flex-col items-center justify-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
+                <div className="flex min-h-64 flex-col items-center justify-center gap-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-8 text-center">
                     <ClipboardList
                         size={40}
                         strokeWidth={1.5}
-                        className="text-slate-400"
+                        className="text-slate-600 dark:text-slate-400"
                     />
 
-                    <h3 className="mt-4 text-lg font-medium text-white">
+                    <h3 className="mt-4 text-lg font-medium text-slate-900 dark:text-white">
                         Nessun task presente
                     </h3>
 
-                    <p className="mt-2 max-w-sm text-sm text-slate-400">
+                    <p className="mt-2 max-w-sm text-sm text-slate-600 dark:text-slate-400">
                         Quando aggiungerai compiti, verifiche o progetti, compariranno qui.
                     </p>
                 </div>
             ) : (
                 <div className="space-y-4">
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
                         {filteredTasks.length === 1
                             ? '1 task visualizzato'
                             : `${filteredTasks.length} task visualizzati`}
                     </p>
 
                     {filteredTasks.length === 0 ? (
-                        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
-                            <p className="text-sm text-slate-400">
+                        <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-6 text-center">
+                            <p className="text-sm text-slate-600 dark:text-slate-400">
                                 Nessun task corrisponde al filtro selezionato.
                             </p>
                         </div>

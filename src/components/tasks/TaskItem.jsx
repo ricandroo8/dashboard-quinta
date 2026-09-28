@@ -37,7 +37,7 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
             className={`rounded-2xl border p-5 transition ${
                 task.completed
                     ? 'border-emerald-500/20 bg-emerald-500/5'
-                    : 'border-white/10 bg-white/5'
+                    : 'border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5'
             }`}
         >
             <div className="flex items-start gap-4">
@@ -49,10 +49,10 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
                             ? 'Segna come non completato'
                             : 'Segna come completato'
                     }
-                    className="mt-1 shrink-0 text-slate-400 transition hover:text-emerald-400 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+                    className="mt-1 shrink-0 text-slate-600 dark:text-slate-400 transition hover:text-emerald-400 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
                 >
                     {task.completed ? (
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-slate-900 dark:text-white">
                             <Check size={16} strokeWidth={3} />
                         </span>
                     ) : (
@@ -67,7 +67,7 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
                                 className={`font-semibold ${
                                     task.completed
                                         ? 'text-slate-500 line-through'
-                                        : 'text-white'
+                                        : 'text-slate-900 dark:text-white'
                                 }`}
                             >
                                 {task.title}
@@ -78,7 +78,7 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
                                     className={`mt-1 text-sm ${
                                         task.completed
                                             ? 'text-slate-600'
-                                            : 'text-slate-400'
+                                            : 'text-slate-600 dark:text-slate-400'
                                     }`}
                                 >
                                     {task.description}
@@ -108,22 +108,22 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
                     </div>
 
                     <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-                        <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-slate-300">
+                        <span className="rounded-full border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 px-2.5 py-1 text-slate-700 dark:text-slate-300">
                             {subjectLabel}
                         </span>
 
-                        <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-slate-300">
+                        <span className="rounded-full border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 px-2.5 py-1 text-slate-700 dark:text-slate-300">
                             {typeLabel}
                         </span>
 
                         {task.isUrgent && (
-                            <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-red-300">
+                            <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-red-700 dark:text-red-300">
                                 Urgente
                             </span>
                         )}
 
                         {task.isImportant && (
-                            <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-amber-300">
+                            <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-amber-700 dark:text-amber-300">
                                 Importante
                             </span>
                         )}

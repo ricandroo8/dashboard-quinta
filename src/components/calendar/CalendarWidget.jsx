@@ -1,4 +1,4 @@
-import { CalendarDays, Clock } from "lucide-react";
+import { CalendarDays, Check, Clock } from "lucide-react";
 import { SUBJECT_LABELS } from "../../constants/subjects";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
@@ -16,6 +16,33 @@ import {
   normalizeCalendarEvent,
   sortEventsByDate,
 } from "../../utils/calendar";
+
+const EVENT_TYPE_STYLES = {
+  [CALENDAR_EVENT_TYPES.SCHEDULE]: {
+    accent: "border-l-slate-400",
+    badge: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+  },
+  [CALENDAR_EVENT_TYPES.TEST]: {
+    accent: "border-l-sky-500",
+    badge: "bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-300",
+  },
+  [CALENDAR_EVENT_TYPES.ORAL_TEST]: {
+    accent: "border-l-violet-500",
+    badge: "bg-violet-100 text-violet-800 dark:bg-violet-500/15 dark:text-violet-300",
+  },
+  [CALENDAR_EVENT_TYPES.DEADLINE]: {
+    accent: "border-l-amber-500",
+    badge: "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+  },
+  [CALENDAR_EVENT_TYPES.OTHER]: {
+    accent: "border-l-emerald-500",
+    badge: "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300",
+  },
+};
+
+function formatEventTypeLabel(eventType) {
+  return eventType.charAt(0) + eventType.slice(1).toLowerCase();
+}
 
 function CalendarWidget({
   events = [],
@@ -57,9 +84,11 @@ function CalendarWidget({
   };
 
   return (
-    <section className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-5">
-      <div className="mb-4 flex items-center gap-2">
-        <CalendarDays size={20} />
+    <section className="rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-white/10 dark:bg-white/5 sm:p-5">
+      <div className="mb-5 flex items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-500/10 text-sky-700 dark:text-sky-300">
+          <CalendarDays size={19} aria-hidden="true" />
+        </span>
 
         <div>
           <h2 className="font-semibold">Calendario</h2>
@@ -70,7 +99,10 @@ function CalendarWidget({
         </div>
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div
+        aria-label="Filtra il calendario per tipologia"
+        className="mb-5 flex flex-wrap gap-2"
+      >
         {Object.values(CALENDAR_EVENT_TYPES).map((eventType) => {
           const isActive =
             calendarFilters[eventType] ??
@@ -81,13 +113,17 @@ function CalendarWidget({
               key={eventType}
               type="button"
               onClick={() => toggleEventType(eventType)}
-              className={`rounded-full border px-3 py-1 text-xs transition ${
+              aria-pressed={isActive}
+              className={`inline-flex min-h-10 items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
                 isActive
-                  ? "border-sky-400/40 bg-sky-400/15 text-sky-200"
-                  : "border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 text-slate-500 dark:text-white/40"
+                  ? "border-slate-900 bg-slate-900 text-white shadow-sm dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950"
+                  : "border-slate-200 bg-white/80 text-slate-500 hover:border-slate-300 hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:text-white/40 dark:hover:border-white/20 dark:hover:bg-white/10"
               }`}
             >
-              {eventType}
+              {isActive && (
+                <Check size={13} strokeWidth={3} aria-hidden="true" />
+              )}
+              {formatEventTypeLabel(eventType)}
             </button>
           );
         })}
@@ -118,68 +154,70 @@ function CalendarWidget({
           {sortedEvents.map((event) => {
             const daysUntil = getDaysUntilEvent(event.startDate);
             const isUpcoming = isUpcomingDeadline(event.startDate);
+            const eventTypeStyle =
+              EVENT_TYPE_STYLES[event.type] ??
+              EVENT_TYPE_STYLES[CALENDAR_EVENT_TYPES.OTHER];
+            const subjectLabel = event.subjectId
+              ? SUBJECT_LABELS[event.subjectId]
+              : null;
 
             return (
-              <div
+              <article
                 key={
                   event.instanceId ??
                   `${event.id}-${event.startDate}`
                 }
-                className={`rounded-xl border p-3 ${
+                className={`rounded-2xl border border-l-4 p-4 shadow-sm shadow-slate-950/[0.03] ${eventTypeStyle.accent} ${
                   isUpcoming
-                    ? "border-amber-400/30 bg-amber-400/10"
-                    : "border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5"
+                    ? "border-slate-200 bg-amber-50/80 dark:border-white/10 dark:bg-amber-400/10"
+                    : "border-slate-200 bg-white/90 dark:border-white/10 dark:bg-white/5"
                 }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="mb-1 flex flex-wrap items-center gap-2">
-                      <span className="text-xs text-slate-500 dark:text-white/50">
-                        {formatEventDate(event.startDate)}
-                      </span>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-white/50">
+                    <span>{formatEventDate(event.startDate)}</span>
 
-                      {!event.isAllDay && (
-                        <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-white/50">
-                          <Clock size={12} />
-                          {formatEventTime(event.startDate)}
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="font-medium">
-                      {event.title}
-                    </p>
-
-                    <p className="mt-1 text-sm text-slate-500 dark:text-white/50">
-                      {event.subjectId
-                        ? SUBJECT_LABELS[event.subjectId]
-                        : event.type}
-                    </p>
-                  </div>
-
-                  <div className="flex shrink-0 flex-col items-end gap-1">
-                    <span className="text-xs text-slate-500 dark:text-white/50">
-                      {event.type}
-                    </span>
-
-                    {daysUntil >= 0 && (
-                      <span
-                        className={`text-xs ${
-                          isUpcoming
-                            ? "font-medium text-amber-700 dark:text-amber-300"
-                            : "text-slate-500 dark:text-white/40"
-                        }`}
-                      >
-                        {daysUntil === 0
-                          ? "Oggi"
-                          : daysUntil === 1
-                            ? "Domani"
-                            : `Tra ${daysUntil} giorni`}
+                    {!event.isAllDay && (
+                      <span className="flex items-center gap-1">
+                        <Clock size={12} aria-hidden="true" />
+                        {formatEventTime(event.startDate)}
                       </span>
                     )}
                   </div>
+
+                  {daysUntil >= 0 && (
+                    <span
+                      className={`shrink-0 rounded-full px-2 py-1 text-[11px] font-semibold ${
+                        isUpcoming
+                          ? "bg-amber-500/15 text-amber-800 dark:text-amber-300"
+                          : "bg-slate-100 text-slate-600 dark:bg-white/5 dark:text-white/50"
+                      }`}
+                    >
+                      {daysUntil === 0
+                        ? "Oggi"
+                        : daysUntil === 1
+                          ? "Domani"
+                          : `Tra ${daysUntil} giorni`}
+                    </span>
+                  )}
                 </div>
-              </div>
+
+                <h3 className="mt-2 text-base font-semibold leading-snug text-slate-900 dark:text-white">
+                  {event.title}
+                </h3>
+
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  {subjectLabel && (
+                    <span className="text-xs text-slate-500 dark:text-white/50">
+                      {subjectLabel}
+                    </span>
+                  )}
+
+                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${eventTypeStyle.badge}`}>
+                    {formatEventTypeLabel(event.type)}
+                  </span>
+                </div>
+              </article>
             );
           })}
         </div>

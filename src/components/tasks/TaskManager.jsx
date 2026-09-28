@@ -79,33 +79,33 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
             />
 
             {/* Card riepilogo */}
-            <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-4">
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                <div className="rounded-xl border border-slate-200 bg-white/80 p-3 dark:border-white/10 dark:bg-white/5 sm:rounded-2xl sm:p-4">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 sm:text-sm">
                         Totali
                     </p>
 
-                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
+                    <p className="mt-1 text-xl font-semibold tabular-nums text-slate-900 dark:text-white sm:mt-2 sm:text-2xl">
                         {totalTasks}
                     </p>
                 </div>
 
-                <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4">
-                    <p className="text-sm text-sky-700 dark:text-sky-300">
+                <div className="rounded-xl border border-sky-500/20 bg-sky-500/5 p-3 sm:rounded-2xl sm:p-4">
+                    <p className="text-xs text-sky-700 dark:text-sky-300 sm:text-sm">
                         Da fare
                     </p>
 
-                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
+                    <p className="mt-1 text-xl font-semibold tabular-nums text-slate-900 dark:text-white sm:mt-2 sm:text-2xl">
                         {activeTasks}
                     </p>
                 </div>
 
-                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4">
-                    <p className="text-sm text-emerald-700 dark:text-emerald-300">
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 sm:rounded-2xl sm:p-4">
+                    <p className="text-xs text-emerald-700 dark:text-emerald-300 sm:text-sm">
                         Completati
                     </p>
 
-                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
+                    <p className="mt-1 text-xl font-semibold tabular-nums text-slate-900 dark:text-white sm:mt-2 sm:text-2xl">
                         {completedTasks}
                     </p>
                 </div>

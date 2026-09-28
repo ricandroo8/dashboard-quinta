@@ -7,6 +7,8 @@ import {
   Trash2,
 } from "lucide-react";
 
+import QuickLinks from "./QuickLinks";
+
 const STORAGE_KEY = "dashboard_quick_hub";
 const SAVE_DELAY_MS = 500;
 
@@ -304,6 +306,8 @@ function QuickNotesHub() {
           </p>
         </div>
       </div>
+
+      <QuickLinks />
 
       <label
         htmlFor="quick-note-content"

@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    font-family: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
 @layer utilities {
   .dashboard-scrollbar {
     scrollbar-color: rgb(71 85 105 / 0.7) transparent;

@@ -9,6 +9,7 @@ export const TASK_TYPES = [
     { value: 'HOMEWORK', label: 'Compito' },
     { value: 'VERIFICATION', label: 'Verifica' },
     { value: 'PROJECT', label: 'Progetto' },
+    { value: 'NOTES', label: 'Appunti' },
     { value: 'OTHER', label: 'Altro' },
 ];
 

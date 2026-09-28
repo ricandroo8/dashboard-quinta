@@ -66,7 +66,7 @@ function Countdown({ targetDate }) {
   return (
     <div>
       <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-slate-500">
-        All'inizio della scuola
+        Alla maturità
       </p>
 
       <div className="flex items-baseline justify-end gap-2 font-mono tabular-nums">

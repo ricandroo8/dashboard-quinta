@@ -48,7 +48,7 @@ function StandingRow({ position, name, detail, points }) {
 
       <p className="text-right text-xs font-bold tabular-nums text-slate-700 dark:text-slate-200">
         {points}
-        <span className="ml-0.5 text-[9px] font-medium text-slate-500">
+        <span className="ml-0.5 text-[10px] font-medium text-slate-500">
           pt
         </span>
       </p>
@@ -62,7 +62,7 @@ function CountdownUnit({ value, label }) {
       <p className="text-base font-bold tabular-nums text-slate-900 dark:text-white">
         {String(value).padStart(2, "0")}
       </p>
-      <p className="mt-0.5 text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+      <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
         {label}
       </p>
     </div>
@@ -142,7 +142,7 @@ function F1Widget({ data }) {
 
             <div className="flex min-h-20 flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-600 dark:border-white/[0.07] dark:bg-white/[0.035] dark:text-slate-400">
               <Flag size={22} className="text-red-700 dark:text-red-300" aria-hidden="true" />
-              <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-wider">
+                <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider">
                 Circuito
               </span>
             </div>
@@ -165,7 +165,7 @@ function F1Widget({ data }) {
             <div className="min-w-0">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-200">Piloti</h3>
-                <span className="text-[9px] uppercase tracking-wider text-slate-600">
+                <span className="text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-400">
                   Punti
                 </span>
               </div>
@@ -186,7 +186,7 @@ function F1Widget({ data }) {
             <div className="min-w-0">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-200">Costruttori</h3>
-                <span className="text-[9px] uppercase tracking-wider text-slate-600">
+                <span className="text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-400">
                   Punti
                 </span>
               </div>

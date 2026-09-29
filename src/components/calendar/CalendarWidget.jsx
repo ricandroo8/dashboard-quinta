@@ -84,7 +84,7 @@ function CalendarWidget({
   };
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-white/10 dark:bg-white/5 sm:p-5">
+    <section className="section-card rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-white/10 dark:bg-white/5 sm:p-5">
       <div className="mb-5 flex items-center gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-500/10 text-sky-700 dark:text-sky-300">
           <CalendarDays size={19} aria-hidden="true" />
@@ -136,7 +136,7 @@ function CalendarWidget({
       ) : error ? (
         <div
           role="alert"
-          className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-3"
+          className="section-card-soft rounded-xl border border-rose-400/20 bg-rose-400/10 p-3"
         >
           <p className="text-sm font-medium text-rose-700 dark:text-rose-200">
             Calendario non disponibile
@@ -167,7 +167,7 @@ function CalendarWidget({
                   event.instanceId ??
                   `${event.id}-${event.startDate}`
                 }
-                className={`rounded-2xl border border-l-4 p-4 shadow-sm shadow-slate-950/[0.03] ${eventTypeStyle.accent} ${
+                className={`section-card-soft rounded-2xl border border-l-4 p-4 shadow-sm shadow-slate-950/[0.03] ${eventTypeStyle.accent} ${
                   isUpcoming
                     ? "border-slate-200 bg-amber-50/80 dark:border-white/10 dark:bg-amber-400/10"
                     : "border-slate-200 bg-white/90 dark:border-white/10 dark:bg-white/5"

@@ -4,6 +4,7 @@ const SECTION_PATHS = {
   pomodoro: "/pomodoro",
   calendar: "/calendar",
   "quick-notes": "/quick-notes",
+  settings: "/settings",
 };
 
 const PATH_SECTIONS = Object.fromEntries(

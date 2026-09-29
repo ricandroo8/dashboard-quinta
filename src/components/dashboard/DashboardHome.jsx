@@ -38,41 +38,49 @@ function DashboardHome({
   f1Error = null,
 }) {
   return (
-    <div className="mx-auto grid w-full max-w-[1600px] gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
-      <div className="grid min-w-0 content-start gap-5">
-        <div className="grid gap-5 md:grid-cols-[1.15fr_0.85fr]">
+    <div className="dashboard-home mx-auto grid w-full max-w-[1600px] gap-5 md:grid-cols-2 xl:grid-cols-12">
+      <div className="dashboard-widget min-w-0 xl:col-span-5">
           <TaskOverviewWidget
             tasks={tasks}
             onToggleTask={onToggleTask}
             onOpenTasks={onOpenTasks}
           />
+      </div>
+
+      <div className="dashboard-widget min-w-0 xl:col-span-3">
           <PomodoroOverviewWidget
             pomodoroConfig={pomodoroConfig}
             pomodoroState={pomodoroState}
             setPomodoroState={setPomodoroState}
             onOpenPomodoro={onOpenPomodoro}
           />
-        </div>
+      </div>
 
-        <div className="grid gap-5 md:grid-cols-[1.35fr_0.65fr]">
+      <div className="dashboard-widget min-w-0 xl:col-span-4">
+        <SpotifyWidget />
+      </div>
+
+      <div className="dashboard-widget min-w-0 xl:col-span-5">
           <CalendarOverviewWidget
             events={calendarEvents}
             loading={calendarLoading}
             error={calendarError}
             onOpenCalendar={onOpenCalendar}
           />
+      </div>
+
+      <div className="dashboard-widget min-w-0 xl:col-span-3">
           <StudyOverviewWidget
             studySessions={studySessions}
             onOpenPomodoro={onOpenPomodoro}
           />
-        </div>
       </div>
 
-      <aside className="grid min-w-0 content-start gap-5">
-        <SpotifyWidget />
-
+      <div className="dashboard-widget min-w-0 xl:col-span-4">
         <WeatherWidget/>
+      </div>
 
+      <div className="dashboard-widget min-w-0 md:col-span-2 xl:col-span-12">
         {f1Loading ? (
           <F1StatusCard
             title="Formula 1"
@@ -87,7 +95,7 @@ function DashboardHome({
         ) : f1Data ? (
           <F1Widget data={f1Data} />
         ) : null}
-      </aside>
+      </div>
     </div>
   );
 }

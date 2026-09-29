@@ -15,7 +15,7 @@ function StudySummary({ studySessions }) {
   );
 
   return (
-    <section className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-6">
+    <section className="section-card rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-6">
       <div className="mb-6">
         <p className="text-sm text-slate-600 dark:text-slate-400">
           Attività di oggi
@@ -27,7 +27,7 @@ function StudySummary({ studySessions }) {
       </div>
 
       <div className="mb-6 grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-slate-200/70 dark:border-white/5 bg-white/80 dark:bg-white/5 p-4">
+        <div className="section-card-soft rounded-xl border border-slate-200/70 dark:border-white/5 bg-white/80 dark:bg-white/5 p-4">
           <p className="text-2xl font-semibold text-slate-900 dark:text-white">
             {sessionCount}
           </p>
@@ -37,7 +37,7 @@ function StudySummary({ studySessions }) {
           </p>
         </div>
 
-        <div className="rounded-xl border border-slate-200/70 dark:border-white/5 bg-white/80 dark:bg-white/5 p-4">
+        <div className="section-card-soft rounded-xl border border-slate-200/70 dark:border-white/5 bg-white/80 dark:bg-white/5 p-4">
           <p className="text-2xl font-semibold text-slate-900 dark:text-white">
             {totalMinutes}
           </p>
@@ -54,7 +54,7 @@ function StudySummary({ studySessions }) {
         </p>
 
         {subjects.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.02]">
+          <div className="section-card-soft rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.02]">
             <p className="text-sm leading-relaxed text-slate-500">
               Completa una sessione per visualizzare la distribuzione dello
               studio.

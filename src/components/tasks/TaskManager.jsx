@@ -80,7 +80,7 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
 
             {/* Card riepilogo */}
             <div className="grid grid-cols-3 gap-2 sm:gap-4">
-                <div className="rounded-xl border border-slate-200 bg-white/80 p-3 dark:border-white/10 dark:bg-white/5 sm:rounded-2xl sm:p-4">
+                <div className="section-card-soft rounded-xl border border-slate-200 bg-white/80 p-3 dark:border-white/10 dark:bg-white/5 sm:rounded-2xl sm:p-4">
                     <p className="text-xs text-slate-600 dark:text-slate-400 sm:text-sm">
                         Totali
                     </p>
@@ -90,7 +90,7 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
                     </p>
                 </div>
 
-                <div className="rounded-xl border border-sky-500/20 bg-sky-500/5 p-3 sm:rounded-2xl sm:p-4">
+                <div className="section-card-soft rounded-xl border border-sky-500/20 bg-sky-500/5 p-3 sm:rounded-2xl sm:p-4">
                     <p className="text-xs text-sky-700 dark:text-sky-300 sm:text-sm">
                         Da fare
                     </p>
@@ -100,7 +100,7 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
                     </p>
                 </div>
 
-                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 sm:rounded-2xl sm:p-4">
+                <div className="section-card-soft rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 sm:rounded-2xl sm:p-4">
                     <p className="text-xs text-emerald-700 dark:text-emerald-300 sm:text-sm">
                         Completati
                     </p>
@@ -150,7 +150,7 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
             </div>
 
             {tasks.length === 0 ? (
-                <div className="flex min-h-64 flex-col items-center justify-center gap-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-8 text-center">
+                <div className="section-card flex min-h-64 flex-col items-center justify-center gap-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-8 text-center">
                     <ClipboardList
                         size={40}
                         strokeWidth={1.5}
@@ -174,7 +174,7 @@ function TaskManager({ tasks, setTasks, onToggleTask }) {
                     </p>
 
                     {filteredTasks.length === 0 ? (
-                        <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-6 text-center">
+                        <div className="section-card rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-6 text-center">
                             <p className="text-sm text-slate-600 dark:text-slate-400">
                                 Nessun task corrisponde al filtro selezionato.
                             </p>

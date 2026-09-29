@@ -95,7 +95,7 @@ function TaskOverviewWidget({
             </div>
           </div>
 
-          <span className="shrink-0 rounded-full border border-sky-400/20 bg-sky-400/10 px-2.5 py-1 text-xs font-medium text-sky-200">
+          <span className="shrink-0 rounded-full border border-sky-400/20 bg-sky-400/10 px-2.5 py-1 text-xs font-medium text-sky-700 dark:text-sky-200">
             {activeTasks.length} da fare
           </span>
         </header>

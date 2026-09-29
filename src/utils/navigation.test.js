@@ -12,11 +12,13 @@ test("associa ogni sezione al relativo percorso", () => {
   assert.equal(getPathnameForSection("pomodoro"), "/pomodoro");
   assert.equal(getPathnameForSection("calendar"), "/calendar");
   assert.equal(getPathnameForSection("quick-notes"), "/quick-notes");
+  assert.equal(getPathnameForSection("settings"), "/settings");
 });
 
 test("riconosce i percorsi anche con slash finale", () => {
   assert.equal(getSectionFromPathname("/tasks/"), "tasks");
   assert.equal(getSectionFromPathname("/quick-notes/"), "quick-notes");
+  assert.equal(getSectionFromPathname("/settings/"), "settings");
 });
 
 test("usa la dashboard per sezioni e percorsi sconosciuti", () => {

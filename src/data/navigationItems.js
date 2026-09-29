@@ -4,6 +4,7 @@ import {
   Timer,
   CalendarDays,
   StickyNote,
+  Settings,
 } from 'lucide-react';
 
 export const navigationItems = [
@@ -32,4 +33,5 @@ export const navigationItems = [
     label: 'Note rapide',
     icon: StickyNote,
   },
+  { id: 'settings', label: 'Impostazioni', icon: Settings },
 ];

@@ -292,7 +292,7 @@ function QuickNotesHub() {
   }
 
   return (
-    <section className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-5">
+    <section className="section-card rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-5">
       <div className="mb-5 flex items-center gap-2">
         <StickyNote size={20} />
 
@@ -377,7 +377,7 @@ function QuickNotesHub() {
             {quickHub.notes.map((savedNote) => (
               <article
                 key={savedNote.id}
-                className="rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-4"
+                className="section-card-soft rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 p-4"
               >
                 {editingNoteId === savedNote.id ? (
                   <div>

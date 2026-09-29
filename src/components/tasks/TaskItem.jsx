@@ -34,7 +34,7 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
 
     return (
         <article
-            className={`rounded-2xl border p-5 transition ${
+            className={`section-card-soft rounded-2xl border p-5 transition ${
                 task.completed
                     ? 'border-emerald-500/20 bg-emerald-500/5'
                     : 'border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5'

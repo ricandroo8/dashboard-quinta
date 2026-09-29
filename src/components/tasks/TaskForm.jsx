@@ -120,7 +120,7 @@ function TaskForm({
     return (
         <form
             onSubmit={handleSubmit}
-            className="space-y-5 rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-white/10 dark:bg-white/5 sm:p-6"
+            className="section-card space-y-5 rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-white/10 dark:bg-white/5 sm:p-6"
         >
             <div>
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white">

@@ -8,9 +8,12 @@ import TaskManager from './components/tasks/TaskManager';
 import PomodoroTimer from "./components/pomodoro/PomodoroTimer";
 import CalendarWidget from "./components/calendar/CalendarWidget";
 import QuickNotesHub from "./components/quick-notes/QuickNotesHub";
+import SettingsPage from "./components/settings/SettingsPage";
+import useAppearance from "./hooks/useAppearance";
 
 import useICal from "./hooks/useICal";
 import useF1Data from './hooks/useF1Data';
+import useDashboardBackground from "./hooks/useDashboardBackground";
 import useLocalStorage from './hooks/useLocalStorage';
 import {
   getPathnameForSection,
@@ -33,6 +36,14 @@ export default function App() {
   );
 
   const theme = storedTheme === "light" ? "light" : "dark";
+  const { preferences, saveError, updatePreference, resetPreferences } = useAppearance();
+  const {
+    backgrounds,
+    isBackgroundLoading,
+    backgroundError,
+    selectBackground,
+    resetBackground,
+  } = useDashboardBackground();
   const [tasks, setTasks] = useLocalStorage("dashboard_tasks", []);
   const [pomodoroConfig, setPomodoroConfig] = useLocalStorage(
     "dashboard_pomodoro_config",
@@ -296,6 +307,8 @@ export default function App() {
       onSectionChange={handleSectionChange}
       theme={theme}
       onToggleTheme={handleToggleTheme}
+      backgrounds={backgrounds}
+      preferences={preferences}
     >
       {activeSection === 'dashboard' && (
         <DashboardHome
@@ -342,6 +355,15 @@ export default function App() {
       )}
       {activeSection === "quick-notes" && (
         <QuickNotesHub />
+      )}
+      {activeSection === "settings" && (
+        <SettingsPage
+          theme={theme} backgrounds={backgrounds}
+          isBackgroundLoading={isBackgroundLoading} backgroundError={backgroundError}
+          onSelectBackground={selectBackground} onResetBackground={resetBackground}
+          preferences={preferences} saveError={saveError}
+          onChangePreference={updatePreference} onResetPreferences={resetPreferences}
+        />
       )}
     </DashboardLayout>
   );

@@ -13,7 +13,7 @@ function Header({ activeSection }) {
   
 
   return (
-    <header className="shrink-0 border-b border-slate-200 bg-white/70 px-6 py-4 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80">
+    <header className="glass-header shrink-0 border-b px-6 py-4">
       <div className="flex min-w-0 items-center justify-between gap-4">
         <div className="min-w-0">
 

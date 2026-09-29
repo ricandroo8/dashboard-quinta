@@ -1,6 +1,7 @@
-import { CalendarDays, Check, Clock } from "lucide-react";
+import { CalendarDays, Check, Clock, Lock } from "lucide-react";
 import { SUBJECT_LABELS } from "../../constants/subjects";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import CalendarAccessPanel from "./CalendarAccessPanel";
 
 import {
   CALENDAR_EVENT_TYPES,
@@ -48,6 +49,9 @@ function CalendarWidget({
   events = [],
   loading = false,
   error = null,
+  authRequired = false,
+  onUnlock,
+  onLock,
 }) {
   const [calendarFilters, setCalendarFilters] =
     useLocalStorage(
@@ -97,37 +101,56 @@ function CalendarWidget({
             Prossime scadenze
           </p>
         </div>
+
+        {!authRequired && onLock && (
+          <button
+            type="button"
+            onClick={onLock}
+            className="ml-auto inline-flex min-h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10"
+          >
+            <Lock size={14} aria-hidden="true" />
+            Blocca
+          </button>
+        )}
       </div>
 
-      <div
-        aria-label="Filtra il calendario per tipologia"
-        className="mb-5 flex flex-wrap gap-2"
-      >
-        {Object.values(CALENDAR_EVENT_TYPES).map((eventType) => {
-          const isActive =
-            calendarFilters[eventType] ??
-            DEFAULT_CALENDAR_FILTERS[eventType];
+      {authRequired ? (
+        <CalendarAccessPanel onUnlock={onUnlock} />
+      ) : (
+        <>
+          <div
+            aria-label="Filtra il calendario per tipologia"
+            className="mb-5 flex flex-wrap gap-2"
+          >
+            {Object.values(CALENDAR_EVENT_TYPES).map((eventType) => {
+              const isActive =
+                calendarFilters[eventType] ??
+                DEFAULT_CALENDAR_FILTERS[eventType];
 
-          return (
-            <button
-              key={eventType}
-              type="button"
-              onClick={() => toggleEventType(eventType)}
-              aria-pressed={isActive}
-              className={`inline-flex min-h-10 items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
-                isActive
-                  ? "border-slate-900 bg-slate-900 text-white shadow-sm dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950"
-                  : "border-slate-200 bg-white/80 text-slate-500 hover:border-slate-300 hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:text-white/40 dark:hover:border-white/20 dark:hover:bg-white/10"
-              }`}
-            >
-              {isActive && (
-                <Check size={13} strokeWidth={3} aria-hidden="true" />
-              )}
-              {formatEventTypeLabel(eventType)}
-            </button>
-          );
-        })}
-      </div>
+              return (
+                <button
+                  key={eventType}
+                  type="button"
+                  onClick={() => toggleEventType(eventType)}
+                  aria-pressed={isActive}
+                  className={`inline-flex min-h-10 items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
+                    isActive
+                      ? "border-slate-900 bg-slate-900 text-white shadow-sm dark:border-slate-100 dark:bg-slate-100 dark:text-slate-950"
+                      : "border-slate-200 bg-white/80 text-slate-500 hover:border-slate-300 hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:text-white/40 dark:hover:border-white/20 dark:hover:bg-white/10"
+                  }`}
+                >
+                  {isActive && (
+                    <Check
+                      size={13}
+                      strokeWidth={3}
+                      aria-hidden="true"
+                    />
+                  )}
+                  {formatEventTypeLabel(eventType)}
+                </button>
+              );
+            })}
+          </div>
 
       {loading ? (
         <p className="text-sm text-slate-500 dark:text-white/50">
@@ -221,6 +244,8 @@ function CalendarWidget({
             );
           })}
         </div>
+      )}
+        </>
       )}
     </section>
   );

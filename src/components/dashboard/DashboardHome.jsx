@@ -32,6 +32,7 @@ function DashboardHome({
   calendarEvents,
   calendarLoading = false,
   calendarError = null,
+  calendarAuthRequired = false,
   onOpenCalendar,
   f1Data,
   f1Loading = false,
@@ -65,6 +66,7 @@ function DashboardHome({
             events={calendarEvents}
             loading={calendarLoading}
             error={calendarError}
+            authRequired={calendarAuthRequired}
             onOpenCalendar={onOpenCalendar}
           />
       </div>

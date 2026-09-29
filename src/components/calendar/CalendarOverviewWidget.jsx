@@ -13,6 +13,7 @@ function CalendarOverviewWidget({
   events = [],
   loading = false,
   error = null,
+  authRequired = false,
   onOpenCalendar,
 }) {
   const upcomingEvents = getDashboardCalendarEvents(events);
@@ -51,7 +52,16 @@ function CalendarOverviewWidget({
         </div>
 
         <div className="mt-5 flex-1">
-          {loading ? (
+          {authRequired ? (
+            <div className="rounded-2xl border border-sky-400/20 bg-sky-400/[0.08] p-4">
+              <p className="text-sm font-medium text-sky-800 dark:text-sky-200">
+                Calendario protetto
+              </p>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
+                Apri il calendario e inserisci la password per vedere gli eventi.
+              </p>
+            </div>
+          ) : loading ? (
             <p className="text-sm text-slate-500">
               Caricamento scadenze...
             </p>

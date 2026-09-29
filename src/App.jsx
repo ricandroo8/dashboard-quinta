@@ -235,6 +235,9 @@ export default function App() {
     events: calendarEvents,
     loading: calendarLoading,
     error: calendarError,
+    authRequired: calendarAuthRequired,
+    unlockCalendar,
+    lockCalendar,
   } = useICal("/api/school-calendar");
 
   const {
@@ -323,6 +326,7 @@ export default function App() {
           calendarEvents={calendarEvents}
           calendarLoading={calendarLoading}
           calendarError={calendarError}
+          calendarAuthRequired={calendarAuthRequired}
           onOpenCalendar={handleOpenCalendar}
           f1Data={f1Data}
           f1Loading={f1Loading}
@@ -351,6 +355,9 @@ export default function App() {
           events={calendarEvents}
           loading={calendarLoading}
           error={calendarError}
+          authRequired={calendarAuthRequired}
+          onUnlock={unlockCalendar}
+          onLock={lockCalendar}
         />
       )}
       {activeSection === "quick-notes" && (

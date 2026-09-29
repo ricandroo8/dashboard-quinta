@@ -8,6 +8,7 @@ import {
 import {
   calculateCountdown,
   formatRaceDate,
+  getCircuitAssetPath,
 } from "../../utils/formula1";
 
 const podiumStyles = {
@@ -69,6 +70,34 @@ function CountdownUnit({ value, label }) {
   );
 }
 
+function CircuitPreview({ circuitId, circuitName }) {
+  const [hasImageError, setHasImageError] = useState(false);
+  const circuitAssetPath = getCircuitAssetPath(circuitId);
+
+  return (
+    <div className="flex min-h-24 flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-2 text-slate-600 dark:border-white/[0.07] dark:bg-white/[0.035] dark:text-slate-400">
+      {circuitAssetPath && !hasImageError ? (
+        <img
+          src={circuitAssetPath}
+          alt={`Tracciato ${circuitName}`}
+          decoding="async"
+          onError={() => setHasImageError(true)}
+          className="h-16 w-full object-contain opacity-80 brightness-0 dark:invert"
+        />
+      ) : (
+        <Flag
+          size={22}
+          className="text-red-700 dark:text-red-300"
+          aria-hidden="true"
+        />
+      )}
+      <span className="mt-1.5 text-center text-[10px] font-semibold uppercase tracking-wider">
+        Circuito
+      </span>
+    </div>
+  );
+}
+
 function F1Widget({ data }) {
     const { nextRace, drivers, constructors } = data;
     const [countdown, setCountdown] = useState(() =>
@@ -120,7 +149,7 @@ function F1Widget({ data }) {
             </span>
           </div>
 
-          <div className="mt-5 grid grid-cols-[minmax(0,1fr)_72px] gap-3">
+          <div className="mt-5 grid grid-cols-[minmax(0,1fr)_96px] gap-3">
             <div className="min-w-0">
               <h3 className="text-xl font-bold leading-tight text-slate-900 dark:text-white">
                 {nextRace.name}
@@ -140,12 +169,11 @@ function F1Widget({ data }) {
               </div>
             </div>
 
-            <div className="flex min-h-20 flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-600 dark:border-white/[0.07] dark:bg-white/[0.035] dark:text-slate-400">
-              <Flag size={22} className="text-red-700 dark:text-red-300" aria-hidden="true" />
-                <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider">
-                Circuito
-              </span>
-            </div>
+            <CircuitPreview
+              key={nextRace.circuitId ?? nextRace.id}
+              circuitId={nextRace.circuitId}
+              circuitName={nextRace.circuit}
+            />
           </div>
 
           {countdown ? (

@@ -68,3 +68,14 @@ tra i Redirect URI della Spotify Developer Dashboard.
 Il file `vercel.json` abilita il deep linking della SPA. Dopo il deploy,
 verificare `/`, `/calendar`, un refresh diretto su `/settings`, lo
 sblocco e il blocco del calendario, meteo e collegamento Spotify.
+
+## Circuiti Formula 1
+
+Gli SVG dei circuiti sono salvati in `public/circuits` e vengono scelti
+automaticamente tramite il `circuitId` restituito da Jolpica/Ergast. Gli
+asset provengono dal progetto pubblico
+`MasterPlay007/F1-Track-Layouts-SVG` con licenza CC0 1.0. Gli asset di
+Madrid e Sepang provengono da F1DB, sono realizzati da Jules Roy e sono
+distribuiti con licenza CC BY 4.0. Se un tracciato non è disponibile, il
+widget conserva l'icona di fallback senza interrompere il caricamento
+degli altri dati.

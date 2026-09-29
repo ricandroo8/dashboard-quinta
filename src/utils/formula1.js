@@ -53,3 +53,14 @@ export function calculateCountdown(dateString) {
         seconds,
     };
 }
+
+export function getCircuitAssetPath(circuitId) {
+    if (
+        typeof circuitId !== "string" ||
+        !/^[a-z0-9_]+$/i.test(circuitId)
+    ) {
+        return null;
+    }
+
+    return `/circuits/${circuitId}.svg`;
+}

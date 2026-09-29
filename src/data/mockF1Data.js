@@ -2,6 +2,7 @@ export const mockF1Data = {
   nextRace: {
     id: "race-italy-2026",
     name: "Gran Premio d'Italia",
+    circuitId: "monza",
     circuit: "Autodromo Nazionale di Monza",
     country: "Italia",
     round: 16,

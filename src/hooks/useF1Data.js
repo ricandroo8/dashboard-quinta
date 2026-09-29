@@ -57,6 +57,7 @@ function useF1Data() {
                 const normalizedRace = {
                     id: `${apiRace.season}-${apiRace.round}`,
                     name: apiRace.raceName,
+                    circuitId: apiRace.Circuit.circuitId,
                     circuit: apiRace.Circuit.circuitName,
                     country: apiRace.Circuit.Location.country,
                     round: Number(apiRace.round),

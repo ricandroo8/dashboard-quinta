@@ -14,7 +14,9 @@ import useAppearance from "./hooks/useAppearance";
 import useICal from "./hooks/useICal";
 import useF1Data from './hooks/useF1Data';
 import useDashboardBackground from "./hooks/useDashboardBackground";
+import useAuth from "./hooks/useAuth";
 import useLocalStorage from './hooks/useLocalStorage';
+import useSyncedTasks from "./hooks/useSyncedTasks";
 import {
   getPathnameForSection,
   getSectionFromPathname,
@@ -26,6 +28,8 @@ import {
 } from "./constants/pomodoro";
 
 export default function App() {
+
+  const { signOut, user } = useAuth();
 
   const [activeSection, setActiveSection] = useState(() =>
     getSectionFromPathname(window.location.pathname)
@@ -44,7 +48,13 @@ export default function App() {
     selectBackground,
     resetBackground,
   } = useDashboardBackground();
-  const [tasks, setTasks] = useLocalStorage("dashboard_tasks", []);
+  const {
+    error: tasksSyncError,
+    isLoading: tasksSyncLoading,
+    retry: retryTasksSync,
+    setTasks,
+    tasks,
+  } = useSyncedTasks(user.id);
   const [pomodoroConfig, setPomodoroConfig] = useLocalStorage(
     "dashboard_pomodoro_config",
     {
@@ -312,6 +322,8 @@ export default function App() {
       onToggleTheme={handleToggleTheme}
       backgrounds={backgrounds}
       preferences={preferences}
+      userEmail={user.email}
+      onSignOut={signOut}
     >
       {activeSection === 'dashboard' && (
         <DashboardHome
@@ -339,6 +351,9 @@ export default function App() {
           tasks={tasks}
           setTasks={setTasks}
           onToggleTask={handleToggleTask}
+          syncError={tasksSyncError}
+          syncLoading={tasksSyncLoading}
+          onRetrySync={retryTasksSync}
         />
       )}
       {activeSection === "pomodoro" && (

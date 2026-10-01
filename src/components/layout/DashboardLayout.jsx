@@ -10,6 +10,8 @@ function DashboardLayout({
   onToggleTheme,
   backgrounds,
   preferences,
+  userEmail,
+  onSignOut,
 }) {
   return (
     <div className="glass-dashboard relative min-h-screen overflow-x-clip text-slate-900 dark:text-slate-100"
@@ -68,7 +70,11 @@ function DashboardLayout({
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <Header activeSection={activeSection} />
+          <Header
+            activeSection={activeSection}
+            userEmail={userEmail}
+            onSignOut={onSignOut}
+          />
 
           <main className="glass-main min-w-0 flex-1 p-4 pb-24 sm:p-6 sm:pb-24 md:pb-6">
             {children}

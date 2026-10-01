@@ -37,6 +37,41 @@ npm run lint
 npm run build
 ```
 
+## Accesso privato e sincronizzazione Attività
+
+L’intera dashboard è protetta con Supabase Auth. Senza configurazione
+Supabase l’applicazione rimane chiusa intenzionalmente: non esiste un
+fallback pubblico. In questa prima fase vengono sincronizzate soltanto le
+Attività; Pomodoro, preferenze, note e altri moduli restano nel
+`localStorage` del singolo dispositivo.
+
+1. Creare un progetto Supabase.
+2. Aprire **SQL Editor** ed eseguire
+   `supabase/migrations/202609300001_create_tasks.sql`.
+3. In **Authentication > Users**, creare il profilo personale.
+4. In **Authentication > Settings**, disattivare **Allow new users to sign
+   up** dopo aver creato il profilo. Verificare inoltre che gli accessi
+   anonimi siano disattivati.
+5. Copiare Project URL e chiave `anon`/publishable nelle variabili:
+
+| Variabile | Visibilità | Requisiti |
+| --- | --- | --- |
+| `VITE_SUPABASE_URL` | Browser | URL HTTPS del progetto Supabase |
+| `VITE_SUPABASE_ANON_KEY` | Browser | Chiave pubblica `anon`/publishable; mai usare `service_role` |
+
+La chiave pubblica non sostituisce la sicurezza del database: la tabella
+`tasks` usa Row Level Security e ogni profilo può leggere e modificare
+soltanto le righe con il proprio `user_id`.
+
+Al primo accesso, le attività già presenti nella vecchia chiave
+`dashboard_tasks` vengono assegnate al primo profilo che accede e unite con
+quelle cloud per ID e data di aggiornamento. Non vengono importate in altri
+profili usati sullo stesso browser. Le cancellazioni sono conservate come
+marcatori locali e sincronizzate come cancellazioni logiche, così un secondo
+dispositivo non può ricreare accidentalmente un’attività eliminata. In
+assenza di rete le modifiche restano nella cache locale; la sincronizzazione
+riparte quando torna la connessione oppure tramite **Riprova**.
+
 Il file `public/calendar-test.ics` contiene eventi di prova, inclusa una
 lezione ricorrente.
 
@@ -54,6 +89,8 @@ Configurare queste variabili in Vercel per gli ambienti desiderati:
 | `SCHOOL_CALENDAR_URL` | Solo server | URL HTTPS privato del feed iCal |
 | `DASHBOARD_ACCESS_PASSWORD` | Solo server | Password robusta di almeno 12 caratteri |
 | `DASHBOARD_SESSION_SECRET` | Solo server | Valore casuale di almeno 32 caratteri |
+| `VITE_SUPABASE_URL` | Browser | URL del progetto Supabase |
+| `VITE_SUPABASE_ANON_KEY` | Browser | Chiave pubblica `anon`/publishable, mai `service_role` |
 | `VITE_OPENWEATHER_API_KEY` | Browser | Limitare la chiave ai domini della dashboard |
 | `VITE_DEFAULT_WEATHER_CITY` | Browser | Città di fallback |
 | `VITE_SPOTIFY_CLIENT_ID` | Browser | Client ID dell'app Spotify |
